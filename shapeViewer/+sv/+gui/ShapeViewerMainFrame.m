@@ -71,9 +71,9 @@ methods
         set(fig, 'WindowButtonUpFcn',       @this.processMouseButtonReleased);
         set(fig, 'WindowButtonMotionFcn',   @this.processMouseMoved);
 
-%         % setup mouse listener for display of mouse coordinates
-%         tool = sv.gui.tools.ShowCursorPositionTool(this, 'showMousePosition');
-%         addMouseListener(this, tool);
+        % setup mouse listener for display of mouse coordinates
+        tool = sv.gui.tools.ShowCursorPositionTool(this, 'showMousePosition');
+        addMouseListener(this, tool);
 %         
 %         tool = sv.gui.tools.SelectionTool(this, 'selection');
 %         addMouseListener(this, tool);
