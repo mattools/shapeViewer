@@ -85,6 +85,7 @@ methods
         function setupMenu(hf)
             
             import sv.actions.*;
+            import sv.actions.io.*;
 %             import sv.gui.tools.*;
             
             % File Menu Definition 
@@ -93,12 +94,12 @@ methods
             
             addMenuItem(fileMenu, CreateNewDocAction(this), '&New Document');
            
-%             action = OpenPointsInTableAction(this, 'openPointSetInTable');
-%             addMenuItem(fileMenu, action, 'Import Point &Set', true);
+            action = OpenPointsInTableAction(this, 'openPointSetInTable');
+            addMenuItem(fileMenu, action, 'Import Point &Set', true);
             action = OpenPolygonInTableAction(this, 'openPolygonInTable');
             addMenuItem(fileMenu, action, 'Import Polygon');
-%             action = OpenPolygonSetInTableAction(this, 'openPolygonSetInTable');
-%             addMenuItem(fileMenu, action, 'Import Polygon Set');
+            action = OpenPolygonSetInTableAction(this, 'openPolygonSetInTable');
+            addMenuItem(fileMenu, action, 'Import Polygon Set');
             action = CloseCurrentDocAction(this, 'closeDoc');
             addMenuItem(fileMenu, action, '&Close', true);
 
@@ -300,9 +301,10 @@ methods
         for i = 1:length(shapes)
             shape = shapes(i);
             hs = draw(shape);
-            set(hs, 'buttonDownFcn', @tool.onMouseClicked);
-            set(hs, 'UserData', shape);
-            
+            if ~isempty(tool)
+                set(hs, 'buttonDownFcn', @tool.onMouseClicked);
+                set(hs, 'UserData', shape);
+            end            
             if any(shape == this.selectedShapes)
                 set(hs, 'Selected', 'on');
             end
