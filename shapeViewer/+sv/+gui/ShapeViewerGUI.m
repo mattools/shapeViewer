@@ -47,6 +47,13 @@ methods
         
         % creates new Scene instance
         scene = Scene();
+        frame = createSceneViewer(this, scene);
+    end
+    
+    function frame = createSceneViewer(this, scene)
+        % Create a new empty scene, add to app, display it, and return it
+        
+        % creates new Scene instance
         doc = sv.app.ShapeViewerDoc(scene);
         
         % creates a display for the new image
@@ -55,6 +62,7 @@ methods
         
     end
     
+
     function exit(this) %#ok<MANU>
         % EXIT 
         disp('exit');

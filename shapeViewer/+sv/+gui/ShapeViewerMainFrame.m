@@ -86,6 +86,7 @@ methods
             
             import sv.actions.*;
             import sv.actions.io.*;
+            import sv.actions.edit.*;
 %             import sv.gui.tools.*;
             
             % File Menu Definition 
@@ -94,6 +95,8 @@ methods
             
             addMenuItem(fileMenu, CreateNewDocAction(this), '&New Document');
            
+            action = OpenSceneAction(this, 'openScene');
+            addMenuItem(fileMenu, action, 'Open Scene...', true);
             action = OpenPointsInTableAction(this, 'openPointSetInTable');
             addMenuItem(fileMenu, action, 'Import Point &Set', true);
             action = OpenPolygonInTableAction(this, 'openPolygonInTable');
@@ -107,6 +110,7 @@ methods
             % Edit Menu Definition 
             
             editMenu = uimenu(hf, 'Label', '&Edit');
+            addMenuItem(editMenu, PrintSceneInfo(this),      'Scene Info');
             
 %             addMenuItem(editMenu, SelectAllShapesAction(this),      'Select &All');
 %             addMenuItem(editMenu, DeleteSelectedShapesAction(this), '&Delete');
@@ -310,11 +314,10 @@ methods
             end
         end
         
-%         % set axis bounds from view box
-%         if ~isempty(this.doc.viewBox)
-%             set(ax, 'XLim', this.doc.viewBox(1:2));
-%             set(ax, 'YLim', this.doc.viewBox(3:4));
-%         end
+        % set axis bounds from view box
+        scene = this.doc.scene;
+        set(ax, 'XLim', scene.xAxis.limits);
+        set(ax, 'YLim', scene.yAxis.limits);
             
 %         % draw lines for X and Y axes, based on current axis bounds
 %         if this.doc.axisLinesVisible
