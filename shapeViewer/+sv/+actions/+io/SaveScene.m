@@ -1,5 +1,5 @@
-classdef OpenSceneAction < sv.gui.ShapeViewerAction
-%OPENSCENEACTION Open a scene file
+classdef SaveScene < sv.gui.ShapeViewerAction
+%OPENSCENEACTION  save the scene contained in the current doc
 %
 %   Class OpenSceneAction
 %
@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = OpenSceneAction(varargin)
+    function this = SaveScene(varargin)
         % Constructor for OpenSceneAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('openScene');
+        this = this@sv.gui.ShapeViewerAction('saveScene');
     end
 
 end % end constructors
@@ -36,30 +36,24 @@ end % end constructors
 %% Methods
 methods
     function run(this, viewer) %#ok<INUSL>
-        disp('Open a scene file');
+        disp('save current scene');
         
-        [fileName, pathName] = uigetfile( ...
+        [fileName, pathName] = uiputfile( ...
             {
             '*.scene',                  'Scene files (*.scene)'; ...
             '*.*',                      'All Files (*.*)'}, ...
-            'Choose file containing scene:', ...
-            viewer.gui.lastOpenPath, ...
-            'MultiSelect', 'on');
+            'Choose scene file:', ...
+            viewer.gui.lastSavePath);
         
         if isequal(fileName,0) || isequal(pathName,0)
             return;
         end
 
         % save load path
-        viewer.gui.lastOpenPath = pathName;
+        viewer.gui.lastSavePath = pathName;
         
         % read the scene frmthe file
-        scene = Scene.read(fullfile(pathName, fileName));
-        
-        % create a new viewer
-        viewer = createSceneViewer(viewer.gui, scene);
-                    
-        updateDisplay(viewer);
+        write(viewer.doc.scene, fullfile(pathName, fileName));
         
     end
 end % end methods

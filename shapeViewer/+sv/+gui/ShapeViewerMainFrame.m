@@ -103,6 +103,9 @@ methods
             addMenuItem(fileMenu, action, 'Import Polygon');
             action = OpenPolygonSetInTableAction('openPolygonSetInTable');
             addMenuItem(fileMenu, action, 'Import Polygon Set');
+            
+            addMenuItem(fileMenu, SaveScene(), 'Save As...', true);
+
             action = CloseCurrentDocAction('closeDoc');
             addMenuItem(fileMenu, action, '&Close', true);
 
@@ -110,7 +113,8 @@ methods
             % Edit Menu Definition 
             
             editMenu = uimenu(hf, 'Label', '&Edit');
-            addMenuItem(editMenu, PrintSceneInfo(),      'Scene Info');
+            addMenuItem(editMenu, SetAxisBounds(), 'Set Axis Bounds...');
+            addMenuItem(editMenu, PrintSceneInfo(), 'Scene Info', true);
             
 %             addMenuItem(editMenu, SelectAllShapesAction(this),      'Select &All');
 %             addMenuItem(editMenu, DeleteSelectedShapesAction(this), '&Delete');

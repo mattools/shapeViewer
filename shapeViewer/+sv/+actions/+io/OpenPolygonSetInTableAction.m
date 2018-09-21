@@ -64,6 +64,8 @@ methods
             % Inner function to read a polygon and add it the the document
             tab = Table.read(fullfile(pathName, fileName));
             
+            box = viewBox(viewer.doc.scene);
+            
             % create polygon set
             for i = 1:size(tab, 1)
                 coords  = rowToPolygon(tab.data(i,:), 'packed');
@@ -71,7 +73,18 @@ methods
                 shape.name = tab.rowNames{i};
             
                 addShape(doc.scene, shape);
+                
+                bbox = boundingBox(tab.data);
+                box(1) = min(box(1), bbox(1));
+                box(2) = max(box(2), bbox(2));
+                box(3) = min(box(3), bbox(3));
+                box(4) = max(box(4), bbox(4));
             end
+            
+            doc.scene.xAxis.limits = box(1:2);
+            doc.scene.yAxis.limits = box(3:4);
+            doc.scene.zAxis.limits = box(5:6);
+           
         end
         
     end

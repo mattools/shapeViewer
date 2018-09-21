@@ -77,7 +77,18 @@ methods
             [path, name] = fileparts(fileName); %#ok<ASGLU>
             shape.name = name;
             
-           addShape(doc.scene, shape);
+            addShape(doc.scene, shape);
+            
+            box = viewBox(viewer.doc.scene);
+            bbox = boundingBox(tab.data);
+            box(1) = min(box(1), bbox(1));
+            box(2) = max(box(2), bbox(2));
+            box(3) = min(box(3), bbox(3));
+            box(4) = max(box(4), bbox(4));
+            doc.scene.xAxis.limits = box(1:2);
+            doc.scene.yAxis.limits = box(3:4);
+            doc.scene.zAxis.limits = box(5:6);
+            
         end
         
     end
