@@ -40,12 +40,18 @@ methods
     function this = Shape(varargin)
     % Constructor for Shape class
 
+        if ~isa(varargin{1}, 'Geometry')
+            error('First argument must bean instance of Geometry');
+        end
+        this.geometry = varargin{1};
+        
         if nargin == 1
-            this.geometry = varargin{1};
             this.style = Style();
             
         elseif nargin == 2
-            this.geometry = varargin{1};
+            if ~isa(varargin{2}, 'sv.app.Style')
+                error('Second argument must bean instance of Style');
+            end
             this.style = varargin{2};
             
         else
