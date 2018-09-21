@@ -72,7 +72,7 @@ methods
         set(fig, 'WindowButtonMotionFcn',   @this.processMouseMoved);
 
         % setup mouse listener for display of mouse coordinates
-        tool = sv.gui.tools.ShowCursorPositionTool(this, 'showMousePosition');
+        tool = sv.tools.ShowCursorPositionTool(this, 'showMousePosition');
         addMouseListener(this, tool);
 %         
 %         tool = sv.gui.tools.SelectionTool(this, 'selection');
@@ -253,10 +253,8 @@ methods
             	'YTick', [], ...
             	'Box', 'off');
             
-%             if ~isempty(this.doc.viewBox)
-%                 set(ax, 'XLim', doc.viewBox(1:2));
-%                 set(ax, 'YLim', doc.viewBox(3:4));
-%             end
+            set(ax, 'XLim', doc.scene.xAxis.limits);
+            set(ax, 'YLim', doc.scene.yAxis.limits);
             
             % keep widgets handles
             this.handles.mainAxis = ax;
