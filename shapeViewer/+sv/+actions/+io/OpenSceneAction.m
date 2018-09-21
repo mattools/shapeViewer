@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = OpenSceneAction(viewer, varargin)
+    function this = OpenSceneAction(varargin)
         % Constructor for OpenSceneAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction(viewer, 'openScene');
+        this = this@sv.gui.ShapeViewerAction('openScene');
     end
 
 end % end constructors
@@ -35,12 +35,8 @@ end % end constructors
 
 %% Methods
 methods
-    function actionPerformed(this, src, event) %#ok<INUSD>
+    function run(this, viewer) %#ok<INUSL>
         disp('Open a scene file');
-        
-        % get handle to parent figure, and current doc
-        viewer = this.viewer;
-        doc = viewer.doc;
         
         [fileName, pathName] = uigetfile( ...
             {
@@ -62,7 +58,6 @@ methods
         
         % create a new viewer
         viewer = createSceneViewer(viewer.gui, scene);
-            
                     
         updateDisplay(viewer);
         

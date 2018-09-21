@@ -16,18 +16,15 @@ classdef CreateNewDocAction < sv.gui.ShapeViewerAction
 % Copyright 2011 INRA - Cepia Software Platform.
 
 methods
-    function this = CreateNewDocAction(viewer, varargin)
+    function this = CreateNewDocAction(varargin)
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction(viewer, 'createNewDoc');
+        this = this@sv.gui.ShapeViewerAction('createNewDoc');
     end
 end
 
 methods
-    function actionPerformed(this, varargin)        
-        gui = this.viewer.gui;
-        
-        createNewEmptyDocument(gui);
-        
+    function run(this, viewer)         %#ok<INUSL>
+        createNewEmptyDocument(viewer.gui);
     end
 end
 

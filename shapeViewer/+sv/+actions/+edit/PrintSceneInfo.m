@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = PrintSceneInfo(viewer, varargin)
+    function this = PrintSceneInfo(varargin)
         % Constructor for PrintSceneInfo class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction(viewer, 'printInfo');
+        this = this@sv.gui.ShapeViewerAction('printInfo');
     end
 
 end % end constructors
@@ -35,11 +35,10 @@ end % end constructors
 
 %% Methods
 methods
-    function actionPerformed(this, src, event) %#ok<INUSD>
+    function run(this, viewer)  %#ok<*INUSL>
         disp('Open a scene file');
         
         % get handle to parent figure, and current doc
-        viewer = this.viewer;
         scene = viewer.doc.scene;
         
         disp('Scene Info: ');

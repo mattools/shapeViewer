@@ -93,24 +93,24 @@ methods
             
             fileMenu = uimenu(hf, 'Label', '&Files');
             
-            addMenuItem(fileMenu, CreateNewDocAction(this), '&New Document');
+            addMenuItem(fileMenu, CreateNewDocAction(), '&New Document');
            
-            action = OpenSceneAction(this, 'openScene');
+            action = OpenSceneAction('openScene');
             addMenuItem(fileMenu, action, 'Open Scene...', true);
-            action = OpenPointsInTableAction(this, 'openPointSetInTable');
+            action = OpenPointsInTableAction('openPointSetInTable');
             addMenuItem(fileMenu, action, 'Import Point &Set', true);
-            action = OpenPolygonInTableAction(this, 'openPolygonInTable');
+            action = OpenPolygonInTableAction('openPolygonInTable');
             addMenuItem(fileMenu, action, 'Import Polygon');
-            action = OpenPolygonSetInTableAction(this, 'openPolygonSetInTable');
+            action = OpenPolygonSetInTableAction('openPolygonSetInTable');
             addMenuItem(fileMenu, action, 'Import Polygon Set');
-            action = CloseCurrentDocAction(this, 'closeDoc');
+            action = CloseCurrentDocAction('closeDoc');
             addMenuItem(fileMenu, action, '&Close', true);
 
             
             % Edit Menu Definition 
             
             editMenu = uimenu(hf, 'Label', '&Edit');
-            addMenuItem(editMenu, PrintSceneInfo(this),      'Scene Info');
+            addMenuItem(editMenu, PrintSceneInfo(),      'Scene Info');
             
 %             addMenuItem(editMenu, SelectAllShapesAction(this),      'Select &All');
 %             addMenuItem(editMenu, DeleteSelectedShapesAction(this), '&Delete');
@@ -174,7 +174,7 @@ methods
             
             % creates new item
             item = uimenu(menu, 'Label', label, ...
-                'Callback', @action.actionPerformed);
+                'Callback', @(src, evt) action.run(this));
             
             % eventually add separator above item
             if ~isempty(varargin)

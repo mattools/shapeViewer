@@ -18,9 +18,6 @@ classdef ShapeViewerAction < handle
 
 %% Properties
 properties
-    % the parent GUI, that should be an instance of ShapeViewerMainFrame
-    viewer;
-    
     % the name of this action, that should be unique for all actions
     name;
 end % end properties
@@ -28,8 +25,7 @@ end % end properties
 
 %% Constructor
 methods
-    function this = ShapeViewerAction(viewer, name)
-        this.viewer = viewer;
+    function this = ShapeViewerAction(name)
         this.name = name;
     end
 
@@ -39,11 +35,11 @@ end % end constructors
 %% Methods
 
 methods (Abstract)
-    actionPerformed(this, src, event)
+    run(this, viewer)
 end
 
 methods
-    function b = isActivable(this) %#ok<MANU>
+    function b = isActivable(this, viewer) %#ok<INUSD>
         b = true;
     end
 end

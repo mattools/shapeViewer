@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = OpenPointsInTableAction(viewer, varargin)
+    function this = OpenPointsInTableAction(varargin)
     % Constructor for OpenPointsInTableAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction(viewer, 'openPointsInTable');
+        this = this@sv.gui.ShapeViewerAction('openPointsInTable');
     end
 
 end % end constructors
@@ -35,11 +35,10 @@ end % end constructors
 
 %% Methods
 methods
-    function actionPerformed(this, src, event) %#ok<INUSD>
+    function run(this, viewer) %#ok<INUSL>
         disp('Open a point set in a table');
         
         % get handle to parent figure, and current doc
-        viewer = this.viewer;
         doc = viewer.doc;
         
         [fileName, pathName] = uigetfile( ...

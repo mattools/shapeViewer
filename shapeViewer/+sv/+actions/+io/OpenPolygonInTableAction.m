@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = OpenPolygonInTableAction(viewer, varargin)
+    function this = OpenPolygonInTableAction(varargin)
     % Constructor for OpenPolygonInTableAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction(viewer, 'openPolygonInTable');
+        this = this@sv.gui.ShapeViewerAction('openPolygonInTable');
     end
 
 end % end constructors
@@ -35,11 +35,10 @@ end % end constructors
 
 %% Methods
 methods
-    function actionPerformed(this, src, event) %#ok<INUSD>
+    function run(this, viewer) %#ok<INUSL>
         disp('Open a polygon in table');
         
         % get handle to parent figure, and current doc
-        viewer = this.viewer;
         doc = viewer.doc;
         
         [fileName, pathName] = uigetfile( ...
