@@ -87,7 +87,7 @@ methods
             import sv.actions.*;
             import sv.actions.io.*;
             import sv.actions.edit.*;
-%             import sv.gui.tools.*;
+            import sv.tools.*;
             
             % File Menu Definition 
             
@@ -114,10 +114,10 @@ methods
             
             editMenu = uimenu(hf, 'Label', '&Edit');
             addMenuItem(editMenu, SetAxisBounds(), 'Set Axis Bounds...');
-            addMenuItem(editMenu, PrintSceneInfo(), 'Scene Info', true);
             
 %             addMenuItem(editMenu, SelectAllShapesAction(this),      'Select &All');
-%             addMenuItem(editMenu, DeleteSelectedShapesAction(this), '&Delete');
+            addMenuItem(editMenu, DeleteSelectedShapes(), '&Clear Selection');
+            addMenuItem(editMenu, PrintSceneInfo(), 'Scene Info', true);
 %            
 %             addMenuItem(editMenu, SetSelectedShapeStyleAction(this),  'Set Display Style...', true);
 %             addMenuItem(editMenu, RenameSelectedShapeAction(this),  '&Rename', true);
@@ -162,15 +162,15 @@ methods
 %                 'Simplify Polygon/Polyline', true);
 %             
 %             
-%             % Tools Menu Definition 
-%             
-%             toolsMenu = uimenu(hf, 'Label', '&Tools');
+            % Tools Menu Definition 
+            
+            toolsMenu = uimenu(hf, 'Label', '&Tools');
 %             addMenuItem(toolsMenu, ...
 %                 SelectToolAction(this, CreatePolygonTool(this)), ...
 %                 'Create &Polygon');
-%             addMenuItem(toolsMenu, ...
-%                 SelectToolAction(this, SelectionTool(this)), ...
-%                 'Selection', true);
+            addMenuItem(toolsMenu, ...
+                SelectToolAction(SelectionTool(this)), ...
+                'Selection', true);
             
         end % end of setupMenu function
 
@@ -276,6 +276,35 @@ methods
     
 end
 
+
+%% Management of selected shapes
+methods
+    function clearSelection(this)
+        % remove all shapes in the selectedShapes field
+        this.selectedShapes = [];
+    end
+    
+    function addToSelection(this, shape)
+        this.selectedShapes = [this.selectedShapes shape];
+    end
+    
+    function removeFromSelection(this, shape)
+        ind = find(shape == this.selectedShapes);
+        if isempty(ind)
+            warning('ShapeViewer:MainFrame:Selection', ...
+                'could not find a shape in selection list');
+            return;
+        end
+        this.selectedShapes(ind(1)) = [];
+    end
+    
+    function onSelectionUpdated(this)
+        updateShapeSelectionDisplay(this);
+        updateShapeList(this);
+    end
+end
+
+
 %% General methods
 
 methods
@@ -371,36 +400,37 @@ methods
     function updateShapeList(this)
         % Refresh the shape tree when a shape is added or removed
 
-%         disp('update shape list');
+        disp('update shape list');
         
-%         nShapes = length(this.doc.shapes);
-%         shapeNames = cell(nShapes, 1);
-%         inds = [];
-%         for i = 1:nShapes
-%             shape = this.doc.shapes(i);
-%             
-%             % create name for current shape
-%             name = shape.name;
-%             if isempty(shape.name)
-%                 name = ['(' class(shape.geometry) ')'];
-%             end
-%             shapeNames{i} = name;
-%             
-%             % create the set of selected indices
-%             if any(shape == this.selectedShapes)
-%                 inds = [inds i]; %#ok<AGROW>
-%             end
-%         end
-% 
-%         % avoid empty indices, causing problems to gui...
-%         if nShapes > 0 && isempty(inds)
-%             inds = 1;
-%         end
-%         
-%         set(this.handles.shapeList, ...
-%             'String', shapeNames, ...
-%             'Max', nShapes, ...
-%             'Value', inds);
+        scene = this.doc.scene;
+        nShapes = length(scene.shapes);
+        shapeNames = cell(nShapes, 1);
+        inds = [];
+        for i = 1:nShapes
+            shape = scene.shapes(i);
+            
+            % create name for current shape
+            name = shape.name;
+            if isempty(shape.name)
+                name = ['(' class(shape.geometry) ')'];
+            end
+            shapeNames{i} = name;
+            
+            % create the set of selected indices
+            if any(shape == this.selectedShapes)
+                inds = [inds i]; %#ok<AGROW>
+            end
+        end
+
+        % avoid empty indices, causing problems to gui...
+        if nShapes > 0 && isempty(inds)
+            inds = 1;
+        end
+        
+        set(this.handles.shapeList, ...
+            'String', shapeNames, ...
+            'Max', nShapes, ...
+            'Value', inds);
     end
 end
 
