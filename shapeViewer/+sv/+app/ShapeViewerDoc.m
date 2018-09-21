@@ -39,8 +39,8 @@ methods
             error('Requires one input argument');
         end
         var1 = varargin{1};
-        if ~isa(var1, 'sv.app.Scene')
-            error('Requires a scene instance as input argument');
+        if ~isa(var1, 'Scene')
+            error('Requires a Scene instance as input argument');
         end
         
         this.scene = var1;

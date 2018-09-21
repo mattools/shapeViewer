@@ -46,7 +46,7 @@ methods
         % Create a new empty scene, add to app, display it, and return it
         
         % creates new Scene instance
-        scene = sv.app.Scene();
+        scene = Scene();
         doc = sv.app.ShapeViewerDoc(scene);
         
         % creates a display for the new image

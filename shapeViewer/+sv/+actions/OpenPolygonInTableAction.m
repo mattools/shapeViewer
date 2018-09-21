@@ -73,7 +73,7 @@ methods
             
             % create polygon
             poly    = Polygon2D(tab.data);
-            shape   = sv.app.Shape(poly);
+            shape   = Shape(poly);
             
             [path, name] = fileparts(fileName); %#ok<ASGLU>
             shape.name = name;
