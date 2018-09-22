@@ -87,6 +87,7 @@ methods
             import sv.actions.*;
             import sv.actions.io.*;
             import sv.actions.edit.*;
+            import sv.actions.view.*;
             import sv.tools.*;
             
             % File Menu Definition 
@@ -122,8 +123,8 @@ methods
 %             addMenuItem(editMenu, SetSelectedShapeStyleAction(this),  'Set Display Style...', true);
 %             addMenuItem(editMenu, RenameSelectedShapeAction(this),  '&Rename', true);
 %            
-%             addMenuItem(editMenu, ZoomInAction(this), 'Zoom &In', true);
-%             addMenuItem(editMenu, ZoomOutAction(this), 'Zoom &Out');
+            addMenuItem(editMenu, ZoomInAction(), 'Zoom &In', true);
+            addMenuItem(editMenu, ZoomOutAction(), 'Zoom &Out');
 %             
 %             
 %              % Document Menu Definition 
