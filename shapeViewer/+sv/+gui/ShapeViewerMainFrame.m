@@ -74,10 +74,10 @@ methods
         % setup mouse listener for display of mouse coordinates
         tool = sv.tools.ShowCursorPositionTool(this, 'showMousePosition');
         addMouseListener(this, tool);
-%         
-%         tool = sv.gui.tools.SelectionTool(this, 'selection');
-%         addMouseListener(this, tool);
-%         this.currentTool = tool;
+        
+        tool = sv.tools.SelectionTool(this, 'selection');
+        addMouseListener(this, tool);
+        this.currentTool = tool;
         
         
         set(fig, 'UserData', this);
@@ -324,11 +324,11 @@ methods
         cla(ax);
         hold on;
         
-%         % initialize line handles for axis lines
-%         if this.doc.axisLinesVisible
-%             hl1 = plot([0 1], [0 0], 'k-');
-%             hl2 = plot([0 0], [0 1], 'k-');
-%         end
+        % initialize line handles for axis lines
+        if this.doc.scene.axisLinesVisible
+            hl1 = plot([0 1], [0 0], 'k-');
+            hl2 = plot([0 0], [0 1], 'k-');
+        end
         
 
         % draw each shape in the document
@@ -351,15 +351,15 @@ methods
         set(ax, 'XLim', scene.xAxis.limits);
         set(ax, 'YLim', scene.yAxis.limits);
             
-%         % draw lines for X and Y axes, based on current axis bounds
-%         if this.doc.axisLinesVisible
+        % draw lines for X and Y axes, based on current axis bounds
+        if this.doc.scene.axisLinesVisible
 %             viewBox = this.doc.viewBox;
 %             if isempty(viewBox)
 %                 viewBox = [get(ax, 'xlim') get(ax, 'ylim')];
 %             end
-%             set(hl1, 'XData', [viewBox(1) viewBox(2)], 'Ydata', [0 0]);
-%             set(hl2, 'Xdata', [0 0], 'YData', [viewBox(3) viewBox(4)]);
-%         end
+            set(hl1, 'XData', scene.xAxis.limits, 'Ydata', [0 0]);
+            set(hl2, 'Xdata', [0 0], 'YData', scene.yAxis.limits);
+        end
 
         updateShapeList(this);
         
