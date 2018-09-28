@@ -15,7 +15,7 @@ function varargout = ShapeViewer(varargin)
 %   ShapeViewer
 %
 %   See also
-%   svui.app.ShapeViewerApp, svui.gui.ShapeViewerGUI, svui.app.Shape
+%   sv.app.ShapeViewerDoc, sv.gui.ShapeViewerGUI, Shape, Scene
 
 % ------
 % Author: David Legland
