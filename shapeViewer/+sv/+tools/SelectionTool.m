@@ -1,4 +1,4 @@
-classdef SelectionTool < svui.gui.ShapeViewerTool
+classdef SelectionTool < sv.gui.ShapeViewerTool
 %SELECTIONTOOL Select shapes
 %
 %   output = SelectionTool(input)
@@ -11,7 +11,7 @@ classdef SelectionTool < svui.gui.ShapeViewerTool
 
 % ------
 % Author: David Legland
-% e-mail: david.legland@nantes.inra.fr
+% e-mail: david.legland@inra.fr
 % Created: 2011-11-21,    using Matlab 7.9.0.529 (R2009b)
 % Copyright 2011 INRA - Cepia Software Platform.
 
@@ -23,7 +23,7 @@ end
 methods
     function this = SelectionTool(viewer, varargin)
         % Creates a new tool using parent gui and a name
-         this = this@svui.gui.ShapeViewerTool(viewer, 'select');
+         this = this@sv.gui.ShapeViewerTool(viewer, 'select');
     end % constructor 
 
 end % construction function

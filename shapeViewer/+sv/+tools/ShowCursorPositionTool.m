@@ -1,4 +1,4 @@
-classdef ShowCursorPositionTool < svui.gui.ShapeViewerTool
+classdef ShowCursorPositionTool < sv.gui.ShapeViewerTool
 %SHOWCURSORPOSITIONTOOL  One-line description here, please.
 %
 %   output = ShowCursorPositionTool(input)
@@ -11,7 +11,7 @@ classdef ShowCursorPositionTool < svui.gui.ShapeViewerTool
 
 % ------
 % Author: David Legland
-% e-mail: david.legland@nantes.inra.fr
+% e-mail: david.legland@inra.fr
 % Created: 2011-11-21,    using Matlab 7.9.0.529 (R2009b)
 % Copyright 2011 INRA - Cepia Software Platform.
 
@@ -20,7 +20,7 @@ classdef ShowCursorPositionTool < svui.gui.ShapeViewerTool
 methods
     function this = ShowCursorPositionTool(viewer, varargin)
         % Creates a new tool using parent gui and a name
-         this = this@svui.gui.ShapeViewerTool(viewer, 'showCursorPosition');
+         this = this@sv.gui.ShapeViewerTool(viewer, 'showCursorPosition');
     end % constructor 
 
 end % construction function
