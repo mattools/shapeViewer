@@ -123,6 +123,7 @@ methods
 %             addMenuItem(editMenu, SetSelectedShapeStyleAction(this),  'Set Display Style...', true);
 %             addMenuItem(editMenu, RenameSelectedShapeAction(this),  '&Rename', true);
 %            
+            addMenuItem(editMenu, ToggleBackgroundImageDisplay(), 'Toggle Background Image Display', true);
             addMenuItem(editMenu, ZoomInAction(), 'Zoom &In', true);
             addMenuItem(editMenu, ZoomOutAction(), 'Zoom &Out');
 %             
@@ -180,6 +181,10 @@ methods
             % creates new item
             item = uimenu(menu, 'Label', label, ...
                 'Callback', @(src, evt) action.run(this));
+            
+            if ~isActivable(action, this)
+                set(item, 'Enable', false);
+            end
             
             % eventually add separator above item
             if ~isempty(varargin)
@@ -325,7 +330,7 @@ methods
         hold on;
 
         % start by background image
-        if ~isempty(this.doc.scene.backgroundImage)
+        if ~isempty(this.doc.scene.backgroundImage) && this.doc.displayBackgroundImage
             show(this.doc.scene.backgroundImage);
         end
 

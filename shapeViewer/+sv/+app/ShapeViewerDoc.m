@@ -26,6 +26,9 @@ properties
     
     % a flag of modification
     modified = false;
+
+    % flag for display of background image
+    displayBackgroundImage = true;
     
 end % end properties
 
