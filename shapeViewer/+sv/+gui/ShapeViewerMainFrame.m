@@ -323,7 +323,12 @@ methods
         % clear axis
         cla(ax);
         hold on;
-        
+
+        % start by background image
+        if ~isempty(this.doc.scene.backgroundImage)
+            show(this.doc.scene.backgroundImage);
+        end
+
         % initialize line handles for axis lines
         if this.doc.scene.axisLinesVisible
             hl1 = plot([0 1], [0 0], 'k-');
