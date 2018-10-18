@@ -42,10 +42,21 @@ methods
         scene = viewer.doc.scene;
         
         disp('Scene Info: ');
-        disp(sprintf('  xlim: [ %f ; %f ]', scene.xAxis.limits));  
-        disp(sprintf('  ylim: [ %f ; %f ]', scene.yAxis.limits));  
-        disp(sprintf('  zlim: [ %f ; %f ]', scene.zAxis.limits));  
-        disp(sprintf('  shape number: %d', length(scene.shapes)));  
+        fprintf('  xlim: [ %f ; %f ]\n', scene.xAxis.limits);  
+        fprintf('  ylim: [ %f ; %f ]\n', scene.yAxis.limits);  
+        fprintf('  zlim: [ %f ; %f ]\n', scene.zAxis.limits);
+        if ~isempty(scene.backgroundImage)
+            fprintf('  backgroundImage: %s\n', scene.backgroundImage.filePath);  
+        end
+        fprintf('  shapes:\n');  
+        for iShape = 1:length(scene.shapes)
+            shape = scene.shapes(iShape);
+            id = sprintf('(%d)', iShape);
+            if ~isempty(shape.name)
+                id = sprintf('%s "%s"', id, shape.name);
+            end
+            fprintf('    %s: %s\n', id, class(shape.geometry));  
+        end
     end
 end % end methods
 

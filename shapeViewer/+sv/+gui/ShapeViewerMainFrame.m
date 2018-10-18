@@ -116,7 +116,7 @@ methods
             editMenu = uimenu(hf, 'Label', '&Edit');
             addMenuItem(editMenu, SetAxisBounds(), 'Set Axis Bounds...');
             
-%             addMenuItem(editMenu, SelectAllShapesAction(this),      'Select &All');
+            addMenuItem(editMenu, SelectAllShapes(this),      'Select &All');
             addMenuItem(editMenu, DeleteSelectedShapes(), '&Clear Selection');
             addMenuItem(editMenu, PrintSceneInfo(), 'Scene Info', true);
 %            

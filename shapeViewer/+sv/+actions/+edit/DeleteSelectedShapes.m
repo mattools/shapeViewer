@@ -43,7 +43,7 @@ methods
        
         shapes = viewer.selectedShapes;
         for i = 1:length(shapes)
-            shape = shapes(1);
+            shape = shapes(i);
             removeShape(scene, shape);
         end
 
