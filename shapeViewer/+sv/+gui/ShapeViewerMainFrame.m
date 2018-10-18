@@ -387,7 +387,7 @@ methods
         for i = 1:length(children)
             % Extract shape referenced by current handle, if any
             shape = get(children(i), 'UserData');
-            if isempty(shape) || ~isa(shape, 'sv.app.Shape')
+            if isempty(shape) || ~isa(shape, 'Shape')
                 continue;
             end
             
@@ -506,7 +506,7 @@ methods
             return;
         end
         
-%         this.selectedShapes = this.doc.shapes(inds);
+        this.selectedShapes = this.doc.scene.shapes(inds);
         updateShapeSelectionDisplay(this);
     end
 end
