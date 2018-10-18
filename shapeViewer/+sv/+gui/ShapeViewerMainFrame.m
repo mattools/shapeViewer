@@ -114,20 +114,18 @@ methods
             % Edit Menu Definition 
             
             editMenu = uimenu(hf, 'Label', '&Edit');
-            addMenuItem(editMenu, SetAxisBounds(), 'Set Axis Bounds...');
-            
             addMenuItem(editMenu, SelectAllShapes(this),      'Select &All');
             addMenuItem(editMenu, DeleteSelectedShapes(), '&Clear Selection');
             addMenuItem(editMenu, PrintSceneInfo(), 'Scene Info', true);
-%            
 %             addMenuItem(editMenu, SetSelectedShapeStyleAction(this),  'Set Display Style...', true);
             addMenuItem(editMenu, RenameSelectedShape(this),  '&Rename', true);
-%            
-            addMenuItem(editMenu, ToggleBackgroundImageDisplay(), 'Toggle Background Image Display', true);
-            addMenuItem(editMenu, ZoomInAction(), 'Zoom &In', true);
-            addMenuItem(editMenu, ZoomOutAction(), 'Zoom &Out');
-%             
-%             
+
+            viewMenu = uimenu(hf, 'Label', '&View');
+            addMenuItem(viewMenu, SetAxisBounds(), 'Set Axis Bounds...');
+            addMenuItem(viewMenu, ToggleBackgroundImageDisplay(), 'Toggle Background Image Display', true);
+            addMenuItem(viewMenu, ZoomInAction(), 'Zoom &In', true);
+            addMenuItem(viewMenu, ZoomOutAction(), 'Zoom &Out');
+            
 %              % Document Menu Definition 
 %             
 %             docMenu = uimenu(hf, 'Label', '&Document');
@@ -167,6 +165,9 @@ methods
             % Tools Menu Definition 
             
             toolsMenu = uimenu(hf, 'Label', '&Tools');
+            addMenuItem(toolsMenu, ...
+                SelectToolAction(CreateMultiPointTool(this)), ...
+                'Create &MultiPoint');
             addMenuItem(toolsMenu, ...
                 SelectToolAction(CreatePolygonTool(this)), ...
                 'Create &Polygon');
