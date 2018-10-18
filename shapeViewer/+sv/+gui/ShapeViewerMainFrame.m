@@ -121,7 +121,7 @@ methods
             addMenuItem(editMenu, PrintSceneInfo(), 'Scene Info', true);
 %            
 %             addMenuItem(editMenu, SetSelectedShapeStyleAction(this),  'Set Display Style...', true);
-%             addMenuItem(editMenu, RenameSelectedShapeAction(this),  '&Rename', true);
+            addMenuItem(editMenu, RenameSelectedShape(this),  '&Rename', true);
 %            
             addMenuItem(editMenu, ToggleBackgroundImageDisplay(), 'Toggle Background Image Display', true);
             addMenuItem(editMenu, ZoomInAction(), 'Zoom &In', true);
