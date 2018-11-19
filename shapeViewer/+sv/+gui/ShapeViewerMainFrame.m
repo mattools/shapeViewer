@@ -98,8 +98,10 @@ methods
            
             action = OpenSceneAction('openScene');
             addMenuItem(fileMenu, action, 'Open Scene...', true);
+            action = ImportGeometryFile('importGeometryFile');
+            addMenuItem(fileMenu, action, 'Import Geometry', true);
             action = OpenPointsInTableAction('openPointSetInTable');
-            addMenuItem(fileMenu, action, 'Import Point &Set', true);
+            addMenuItem(fileMenu, action, 'Import Point &Set');
             action = OpenPolygonInTableAction('openPolygonInTable');
             addMenuItem(fileMenu, action, 'Import Polygon');
             action = OpenPolygonSetInTableAction('openPolygonSetInTable');
