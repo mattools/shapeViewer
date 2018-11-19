@@ -58,7 +58,11 @@ methods
         
         % create a new viewer
         viewer = createSceneViewer(viewer.gui, scene);
-                    
+        [tmp, baseName] = fileparts(fileName); %#ok<ASGLU>
+        viewer.doc.name = baseName;
+        
+        
+        updateTitle(viewer);
         updateDisplay(viewer);
         
     end
