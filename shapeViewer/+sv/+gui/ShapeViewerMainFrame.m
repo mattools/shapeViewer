@@ -87,6 +87,7 @@ methods
             import sv.actions.*;
             import sv.actions.io.*;
             import sv.actions.edit.*;
+            import sv.actions.process.*;
             import sv.actions.view.*;
             import sv.tools.*;
             
@@ -148,7 +149,7 @@ methods
 %             % geometric transform of shapes
 %             addMenuItem(processMenu, FlipShapeHorizAction(this), '&Horizontal Flip');
 %             addMenuItem(processMenu, FlipShapeVertAction(this), '&Vertical Flip');
-%             addMenuItem(processMenu, RecenterShapeAction(this), 'Recenter');
+            addMenuItem(processMenu, RecenterSelectedShapes(this), 'Recenter');
 %             addMenuItem(processMenu, TranslateShapeAction(this), '&Translate...');
 %             addMenuItem(processMenu, ScaleShapeAction(this), '&Scale...');
 %             addMenuItem(processMenu, RotateShapeAction(this), '&Rotate...');

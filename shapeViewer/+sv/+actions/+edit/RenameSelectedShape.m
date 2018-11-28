@@ -1,10 +1,10 @@
 classdef RenameSelectedShape < sv.gui.ShapeViewerAction
-%ADDSHAPEBOUNDINGBOXACTION add the convex hull of selected shape to doc
+% Rename the selected shape
 %
-%   Class RenameSelectedShapeAction
+%   Class RenameSelectedShape
 %
 %   Example
-%   RenameSelectedShapeAction
+%   RenameSelectedShape
 %
 %   See also
 %
