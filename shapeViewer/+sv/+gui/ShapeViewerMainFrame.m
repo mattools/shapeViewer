@@ -121,6 +121,8 @@ methods
             addMenuItem(editMenu, DeleteSelectedShapes(), '&Clear Selection');
             addMenuItem(editMenu, PrintSceneInfo(), 'Scene Info', true);
 %             addMenuItem(editMenu, SetSelectedShapeStyleAction(this),  'Set Display Style...', true);
+            addMenuItem(editMenu, SetSelectedShapesLineColor(this),  'Set Selection Line Color...', true);
+            addMenuItem(editMenu, SetSelectedShapesLineWidth(this),  'Set Selection Line Width...');
             addMenuItem(editMenu, RenameSelectedShape(this),  '&Rename', true);
 
             viewMenu = uimenu(hf, 'Label', '&View');
