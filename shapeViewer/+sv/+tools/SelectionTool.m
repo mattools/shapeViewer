@@ -16,29 +16,29 @@ classdef SelectionTool < sv.gui.ShapeViewerTool
 % Copyright 2011 INRA - Cepia Software Platform.
 
 properties
-    selectedHandles = [];
+    SelectedHandles = [];
 end
 
 %% Constructor
 methods
-    function this = SelectionTool(viewer, varargin)
+    function obj = SelectionTool(viewer, varargin)
         % Creates a new tool using parent gui and a name
-         this = this@sv.gui.ShapeViewerTool(viewer, 'select');
+         obj = obj@sv.gui.ShapeViewerTool(viewer, 'select');
     end % constructor 
 
 end % construction function
 
 %% General methods
 methods
-    function onMouseButtonPressed(this, hObject, eventdata) %#ok<INUSD>
+    function onMouseButtonPressed(obj, hObject, eventdata) %#ok<INUSD>
         % called when mouse button was pressed on empty area of current axis 
         
 %         disp('button pressed');
-        clearSelection(this);
-%         onSelectionUpdated(this.viewer);
+        clearSelection(obj);
+%         onSelectionUpdated(obj.viewer);
     end
     
-    function onMouseClicked(this, hObject, eventdata) %#ok<INUSD>
+    function onMouseClicked(obj, hObject, eventdata) %#ok<INUSD>
         % called when mouse button was pressed on a shape
         
 %         disp('click');
@@ -46,40 +46,40 @@ methods
         % toggles the selection state of current object
         sel = get(hObject, 'Selected');
         if strcmp(sel, 'on')
-            removeFromSelection(this, hObject);
+            removeFromSelection(obj, hObject);
         else
-            clearSelection(this);
-            addToSelection(this, hObject)
+            clearSelection(obj);
+            addToSelection(obj, hObject)
         end
         
-        onSelectionUpdated(this.viewer);
+        onSelectionUpdated(obj.Viewer);
     end
         
-    function clearSelection(this)
+    function clearSelection(obj)
         % clear selected state of all displayed shapes
         
-        children = get(this.viewer.handles.mainAxis, 'children');
+        children = get(obj.Viewer.Handles.MainAxis, 'children');
         for i = 1:length(children)
             set(children(i), 'selected', 'off');
         end
         
-        clearSelection(this.viewer);
+        clearSelection(obj.Viewer);
     end
     
-    function addToSelection(this, hObj)
-        this.selectedHandles = [this.selectedHandles hObj];
+    function addToSelection(obj, hObj)
+        obj.SelectedHandles = [obj.SelectedHandles hObj];
         set(hObj, 'Selected', 'on');
         
         shape = get(hObj, 'UserData');
-        addToSelection(this.viewer, shape);
+        addToSelection(obj.Viewer, shape);
     end
     
-    function removeFromSelection(this, hObj)
-        this.selectedHandles(this.selectedHandles == hObj) = [];
+    function removeFromSelection(obj, hObj)
+        obj.SelectedHandles(obj.SelectedHandles == hObj) = [];
         set(hObj, 'Selected', 'off');
         
         shape = get(hObj, 'UserData');
-        removeFromSelection(this.viewer, shape);
+        removeFromSelection(obj.Viewer, shape);
     end
     
 end % general methods

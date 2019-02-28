@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = SetSelectedShapesLineWidth(varargin)
+    function obj = SetSelectedShapesLineWidth(varargin)
     % Constructor for DeleteSelectedShapesAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('setSelectedShapesLineWidth');
+        obj = obj@sv.gui.ShapeViewerAction('setSelectedShapesLineWidth');
     end
 
 end % end constructors
@@ -35,7 +35,7 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
         disp('set selected shapes line width');
         
         prompt = {'Enter new Line Width:'};
@@ -55,10 +55,10 @@ methods
         end
         
         % iterate over selected shapes
-        shapes = viewer.selectedShapes;
+        shapes = viewer.SelectedShapes;
         for i = 1:length(shapes)
             shape = shapes(i);
-            shape.style.lineWidth = newWidth;
+            shape.Style.LineWidth = newWidth;
         end
 
         updateDisplay(viewer);

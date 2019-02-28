@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = OpenPolygonInTableAction(varargin)
+    function obj = OpenPolygonInTableAction(varargin)
     % Constructor for OpenPolygonInTableAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('openPolygonInTable');
+        obj = obj@sv.gui.ShapeViewerAction('openPolygonInTable');
     end
 
 end % end constructors
@@ -35,18 +35,18 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
         disp('Open a polygon in table');
         
         % get handle to parent figure, and current doc
-        doc = viewer.doc;
+        doc = viewer.Doc;
         
         [fileName, pathName] = uigetfile( ...
             {
             '*.txt',                    'Text files (*.txt)'; ...
             '*.*',                      'All Files (*.*)'}, ...
             'Choose data table containing polygon vertices:', ...
-            viewer.gui.lastOpenPath, ...
+            viewer.GUI.LastOpenPath, ...
             'MultiSelect', 'on');
         
         if isequal(fileName,0) || isequal(pathName,0)
@@ -54,7 +54,7 @@ methods
         end
 
         % save load path
-        viewer.gui.lastOpenPath = pathName;
+        viewer.GUI.LastOpenPath = pathName;
         
         if ischar(fileName)
             importPolygon(fileName, pathName);
@@ -75,19 +75,19 @@ methods
             shape   = Shape(poly);
             
             [path, name] = fileparts(fileName); %#ok<ASGLU>
-            shape.name = name;
+            shape.Name = name;
             
-            addShape(doc.scene, shape);
+            addShape(doc.Scene, shape);
             
-            box = viewBox(viewer.doc.scene);
+            box = viewBox(viewer.Doc.Scene);
             bbox = boundingBox(tab.data);
             box(1) = min(box(1), bbox(1));
             box(2) = max(box(2), bbox(2));
             box(3) = min(box(3), bbox(3));
             box(4) = max(box(4), bbox(4));
-            doc.scene.xAxis.limits = box(1:2);
-            doc.scene.yAxis.limits = box(3:4);
-            doc.scene.zAxis.limits = box(5:6);
+            doc.Scene.XAxis.Limits = box(1:2);
+            doc.Scene.YAxis.Limits = box(3:4);
+            doc.Scene.ZAxis.Limits = box(5:6);
             
         end
         

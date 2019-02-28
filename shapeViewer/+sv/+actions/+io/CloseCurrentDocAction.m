@@ -16,14 +16,14 @@ classdef CloseCurrentDocAction < sv.gui.ShapeViewerAction
 % Copyright 2011 INRA - Cepia Software Platform.
 
 methods
-    function this = CloseCurrentDocAction(varargin)
+    function obj = CloseCurrentDocAction(varargin)
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('closeCurrentDoc');
+        obj = obj@sv.gui.ShapeViewerAction('closeCurrentDoc');
     end
 end
 
 methods
-    function run(this, viewer)         %#ok<INUSL>
+    function run(obj, viewer)         %#ok<INUSL>
         viewer.close();
     end
 end

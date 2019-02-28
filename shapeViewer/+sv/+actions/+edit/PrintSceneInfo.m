@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = PrintSceneInfo(varargin)
+    function obj = PrintSceneInfo(varargin)
         % Constructor for PrintSceneInfo class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('printInfo');
+        obj = obj@sv.gui.ShapeViewerAction('printInfo');
     end
 
 end % end constructors
@@ -35,27 +35,27 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer)  %#ok<*INUSL>
+    function run(obj, viewer)  %#ok<*INUSL>
         disp('Open a scene file');
         
         % get handle to parent figure, and current doc
-        scene = viewer.doc.scene;
+        scene = viewer.Doc.Scene;
         
         disp('Scene Info: ');
-        fprintf('  xlim: [ %f ; %f ]\n', scene.xAxis.limits);  
-        fprintf('  ylim: [ %f ; %f ]\n', scene.yAxis.limits);  
-        fprintf('  zlim: [ %f ; %f ]\n', scene.zAxis.limits);
-        if ~isempty(scene.backgroundImage)
-            fprintf('  backgroundImage: %s\n', scene.backgroundImage.filePath);  
+        fprintf('  xlim: [ %f ; %f ]\n', scene.XAxis.Limits);  
+        fprintf('  ylim: [ %f ; %f ]\n', scene.YAxis.Limits);  
+        fprintf('  zlim: [ %f ; %f ]\n', scene.ZAxis.Limits);
+        if ~isempty(scene.BackgroundImage)
+            fprintf('  backgroundImage: %s\n', scene.BackgroundImage.FilePath);  
         end
         fprintf('  shapes:\n');  
-        for iShape = 1:length(scene.shapes)
-            shape = scene.shapes(iShape);
+        for iShape = 1:length(scene.Shapes)
+            shape = scene.Shapes(iShape);
             id = sprintf('(%d)', iShape);
-            if ~isempty(shape.name)
-                id = sprintf('%s "%s"', id, shape.name);
+            if ~isempty(shape.Name)
+                id = sprintf('%s "%s"', id, shape.Name);
             end
-            fprintf('    %s: %s\n', id, class(shape.geometry));  
+            fprintf('    %s: %s\n', id, class(shape.Geometry));  
         end
     end
 end % end methods

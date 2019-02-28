@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = RenameSelectedShape(varargin)
+    function obj = RenameSelectedShape(varargin)
     % Constructor for RenameSelectedShape class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('renameSelection');
+        obj = obj@sv.gui.ShapeViewerAction('renameSelection');
     end
 
 end % end constructors
@@ -35,11 +35,11 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer)  %#ok<*INUSL>
+    function run(obj, viewer)  %#ok<*INUSL>
         disp('rename');
         
         % get handle to parent viewer, and selected shapes
-        shapes = viewer.selectedShapes;
+        shapes = viewer.SelectedShapes;
         
         % basic input checks
         if isempty(shapes)
@@ -52,9 +52,9 @@ methods
             
         % extract shape name, or create one if necessary
         shape = shapes(1);
-        name = shape.name;
+        name = shape.Name;
         if isempty(name)
-            name = ['(' class(shape.geometry) ')'];
+            name = ['(' class(shape.Geometry) ')'];
         end
         
         % input the new shape name
@@ -65,7 +65,7 @@ methods
             return;
         end
         
-        shape.name = answer{1};
+        shape.Name = answer{1};
         updateDisplay(viewer);
     end
 end % end methods

@@ -19,18 +19,18 @@ classdef ShapeViewerGUI < handle
 %% Properties
 properties
     % the list of open frames
-    frameList;
+    FrameList;
     
     % remember where files were loaded and saved
-    lastOpenPath = '.';
-    lastSavePath = '.';
+    LastOpenPath = '.';
+    LastSavePath = '.';
 
 end % end properties
 
 
 %% Constructor
 methods
-    function this = ShapeViewerGUI(varargin)
+    function obj = ShapeViewerGUI(varargin)
         % ShapeViewerGUI constructor
         %
 
@@ -42,28 +42,28 @@ end % end constructors
 
 %% General methods
 methods
-    function frame = createNewEmptyDocument(this)
+    function frame = createNewEmptyDocument(obj)
         % Create a new empty scene, add to app, display it, and return it
         
         % creates new Scene instance
         scene = Scene();
-        frame = createSceneViewer(this, scene);
+        frame = createSceneViewer(obj, scene);
     end
     
-    function frame = createSceneViewer(this, scene)
+    function frame = createSceneViewer(obj, scene)
         % Create a new empty scene, add to app, display it, and return it
         
         % creates new Scene instance
         doc = sv.app.ShapeViewerDoc(scene);
         
         % creates a display for the new image
-        frame = sv.gui.ShapeViewerMainFrame(this, doc);
-        addFrame(this, frame);
+        frame = sv.gui.ShapeViewerMainFrame(obj, doc);
+        addFrame(obj, frame);
         
     end
     
 
-    function exit(this) %#ok<MANU>
+    function exit(obj) %#ok<MANU>
         % EXIT 
         disp('exit');
     end
@@ -72,8 +72,8 @@ end % general methods
 
 %% Frame management
 methods
-    function addFrame(this, frame)
-        this.frameList = [this.frameList frame];
+    function addFrame(obj, frame)
+        obj.FrameList = [obj.FrameList frame];
     end
 end
 

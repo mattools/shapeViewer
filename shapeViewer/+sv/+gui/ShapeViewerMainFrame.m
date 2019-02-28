@@ -19,31 +19,31 @@ classdef ShapeViewerMainFrame < handle
 %% Properties
 properties
     % reference to the main GUI instance
-    gui;
+    GUI;
    
     % list of handles to the various gui items
-    handles;
+    Handles;
     
     % the document containing the scene
-    doc;
+    Doc;
     
     % the set of mouse listeners.
-    mouseListeners = [];
+    MouseListeners = [];
     
     % the currently selected tool
-    currentTool = [];
+    CurrentTool = [];
     
     % the set of selected shapes, stored as a cell array
-    selectedShapes = [];
+    SelectedShapes = [];
 
 end % end properties
 
 
 %% Constructor
 methods
-    function this = ShapeViewerMainFrame(gui, doc)
-        this.gui = gui;
-        this.doc = doc;
+    function obj = ShapeViewerMainFrame(gui, doc)
+        obj.GUI = gui;
+        obj.Doc = doc;
         
         % create default figure
         fig = figure(...
@@ -56,31 +56,31 @@ methods
         setupMenu(fig);
         setupLayout(fig);
         
-        this.handles.figure = fig;
+        obj.Handles.Figure = fig;
         
-        updateDisplay(this);
-        updateTitle(this);
+        updateDisplay(obj);
+        updateTitle(obj);
         
         % setup listeners associated to the figure
         set(fig, ...
-            'CloseRequestFcn', @this.close, ...
-            'ResizeFcn', @this.onFigureResized);
+            'CloseRequestFcn', @obj.close, ...
+            'ResizeFcn', @obj.onFigureResized);
         
         % setup mouse listeners associated to the figure
-        set(fig, 'WindowButtonDownFcn',     @this.processMouseButtonPressed);
-        set(fig, 'WindowButtonUpFcn',       @this.processMouseButtonReleased);
-        set(fig, 'WindowButtonMotionFcn',   @this.processMouseMoved);
+        set(fig, 'WindowButtonDownFcn',     @obj.processMouseButtonPressed);
+        set(fig, 'WindowButtonUpFcn',       @obj.processMouseButtonReleased);
+        set(fig, 'WindowButtonMotionFcn',   @obj.processMouseMoved);
 
         % setup mouse listener for display of mouse coordinates
-        tool = sv.tools.ShowCursorPositionTool(this, 'showMousePosition');
-        addMouseListener(this, tool);
+        tool = sv.tools.ShowCursorPositionTool(obj, 'showMousePosition');
+        addMouseListener(obj, tool);
         
-        tool = sv.tools.SelectionTool(this, 'selection');
-        addMouseListener(this, tool);
-        this.currentTool = tool;
+        tool = sv.tools.SelectionTool(obj, 'selection');
+        addMouseListener(obj, tool);
+        obj.CurrentTool = tool;
         
         
-        set(fig, 'UserData', this);
+        set(fig, 'UserData', obj);
         
         function setupMenu(hf)
             
@@ -117,13 +117,13 @@ methods
             % Edit Menu Definition 
             
             editMenu = uimenu(hf, 'Label', '&Edit');
-            addMenuItem(editMenu, SelectAllShapes(this),      'Select &All');
+            addMenuItem(editMenu, SelectAllShapes(obj),      'Select &All');
             addMenuItem(editMenu, DeleteSelectedShapes(), '&Clear Selection');
             addMenuItem(editMenu, PrintSceneInfo(), 'Scene Info', true);
-%             addMenuItem(editMenu, SetSelectedShapeStyleAction(this),  'Set Display Style...', true);
-            addMenuItem(editMenu, SetSelectedShapesLineColor(this),  'Set Selection Line Color...', true);
-            addMenuItem(editMenu, SetSelectedShapesLineWidth(this),  'Set Selection Line Width...');
-            addMenuItem(editMenu, RenameSelectedShape(this),  '&Rename', true);
+%             addMenuItem(editMenu, SetSelectedShapeStyleAction(obj),  'Set Display Style...', true);
+            addMenuItem(editMenu, SetSelectedShapesLineColor(obj),  'Set Selection Line Color...', true);
+            addMenuItem(editMenu, SetSelectedShapesLineWidth(obj),  'Set Selection Line Width...');
+            addMenuItem(editMenu, RenameSelectedShape(obj),  '&Rename', true);
 
             viewMenu = uimenu(hf, 'Label', '&View');
             addMenuItem(viewMenu, SetAxisBounds(), 'Set Axis Bounds...');
@@ -134,14 +134,14 @@ methods
 %              % Document Menu Definition 
 %             
 %             docMenu = uimenu(hf, 'Label', '&Document');
-%             addMenuItem(docMenu, AddNewDemoShapeAction(this), 'Add Demo Shape');
-%             addMenuItem(docMenu, AddPaperHenShapeAction(this), 'Add Paper Hen Shape');
-%             addMenuItem(docMenu, AddRandomPointsAction(this), 'Add Random Points');
-%             addMenuItem(docMenu, DisplaySelectionInfoAction(this), 'Display &Info', true);
-%             addMenuItem(docMenu, SetDocumentViewBoxAction(this), 'Set &View Box...', true);
-%             addMenuItem(docMenu, ToggleDocumentShowAxisLinesAction(this), 'Toggle &Axis Lines');
-%             addMenuItem(docMenu, ChangeUserUnitAction(this), 'Change &Unit...');
-%             addMenuItem(docMenu, RenameCurrentDocAction(this), '&Rename...');
+%             addMenuItem(docMenu, AddNewDemoShapeAction(obj), 'Add Demo Shape');
+%             addMenuItem(docMenu, AddPaperHenShapeAction(obj), 'Add Paper Hen Shape');
+%             addMenuItem(docMenu, AddRandomPointsAction(obj), 'Add Random Points');
+%             addMenuItem(docMenu, DisplaySelectionInfoAction(obj), 'Display &Info', true);
+%             addMenuItem(docMenu, SetDocumentViewBoxAction(obj), 'Set &View Box...', true);
+%             addMenuItem(docMenu, ToggleDocumentShowAxisLinesAction(obj), 'Toggle &Axis Lines');
+%             addMenuItem(docMenu, ChangeUserUnitAction(obj), 'Change &Unit...');
+%             addMenuItem(docMenu, RenameCurrentDocAction(obj), '&Rename...');
 %             
             
            % Process Menu Definition 
@@ -149,21 +149,21 @@ methods
             processMenu = uimenu(hf, 'Label', '&Process');
 
 %             % geometric transform of shapes
-%             addMenuItem(processMenu, FlipShapeHorizAction(this), '&Horizontal Flip');
-%             addMenuItem(processMenu, FlipShapeVertAction(this), '&Vertical Flip');
-            addMenuItem(processMenu, RecenterSelectedShapes(this), 'Recenter');
-%             addMenuItem(processMenu, TranslateShapeAction(this), '&Translate...');
-%             addMenuItem(processMenu, ScaleShapeAction(this), '&Scale...');
-%             addMenuItem(processMenu, RotateShapeAction(this), '&Rotate...');
+%             addMenuItem(processMenu, FlipShapeHorizAction(obj), '&Horizontal Flip');
+%             addMenuItem(processMenu, FlipShapeVertAction(obj), '&Vertical Flip');
+            addMenuItem(processMenu, RecenterSelectedShapes(obj), 'Recenter');
+%             addMenuItem(processMenu, TranslateShapeAction(obj), '&Translate...');
+%             addMenuItem(processMenu, ScaleShapeAction(obj), '&Scale...');
+%             addMenuItem(processMenu, RotateShapeAction(obj), '&Rotate...');
 % 
 %             % computation of derived shapes
-%             addMenuItem(processMenu, AddShapeBoundingBoxAction(this), '&Bounding Box', true);
-%             addMenuItem(processMenu, AddShapeOrientedBoxAction(this), '&Oriented Box');
-%             addMenuItem(processMenu, AddShapeConvexHullAction(this), '&Convex Hull');
-%             addMenuItem(processMenu, AddShapeInertiaEllipseAction(this), 'Inertia &Ellipse');
+%             addMenuItem(processMenu, AddShapeBoundingBoxAction(obj), '&Bounding Box', true);
+%             addMenuItem(processMenu, AddShapeOrientedBoxAction(obj), '&Oriented Box');
+%             addMenuItem(processMenu, AddShapeConvexHullAction(obj), '&Convex Hull');
+%             addMenuItem(processMenu, AddShapeInertiaEllipseAction(obj), 'Inertia &Ellipse');
 %             
 %             % operations on polygons
-%             addMenuItem(processMenu, SimplifyPolygonAction(this), ...
+%             addMenuItem(processMenu, SimplifyPolygonAction(obj), ...
 %                 'Simplify Polygon/Polyline', true);
 %             
 %             
@@ -171,13 +171,13 @@ methods
             
             toolsMenu = uimenu(hf, 'Label', '&Tools');
             addMenuItem(toolsMenu, ...
-                SelectToolAction(CreateMultiPointTool(this)), ...
+                SelectToolAction(CreateMultiPointTool(obj)), ...
                 'Create &MultiPoint');
             addMenuItem(toolsMenu, ...
-                SelectToolAction(CreatePolygonTool(this)), ...
+                SelectToolAction(CreatePolygonTool(obj)), ...
                 'Create &Polygon');
             addMenuItem(toolsMenu, ...
-                SelectToolAction(SelectionTool(this)), ...
+                SelectToolAction(SelectionTool(obj)), ...
                 'Selection', true);
             
         end % end of setupMenu function
@@ -186,9 +186,9 @@ methods
             
             % creates new item
             item = uimenu(menu, 'Label', label, ...
-                'Callback', @(src, evt) action.run(this));
+                'Callback', @(src, evt) action.run(obj));
             
-            if ~isActivable(action, this)
+            if ~isActivable(action, obj)
                 set(item, 'Enable', false);
             end
             
@@ -228,14 +228,14 @@ methods
                 'BorderType', 'none', ...
                 'BorderWidth', 0);
             
-            this.handles.shapeList = uicontrol(...
+            obj.Handles.ShapeList = uicontrol(...
                 'Style', 'listbox', ...
                 'Parent', treePanel, ...
                 'String', {'Circle', 'Poly1', 'Poly2', 'Ellipse'}, ...
-                'Min', 1, 'Max', 4, ...
+                'Min', 1, 'Max', Inf, ...
                 'Units', 'normalized', ...
                 'Position', [0 0 1 1], ...
-                'Callback', @this.onShapeListModified);
+                'Callback', @obj.onShapeListModified);
 
 %             displayOptionsPanel = uipanel(...
 %                 'parent', docInfoPanel, ...
@@ -249,8 +249,8 @@ methods
                         
             docInfoPanel.Heights = [-1 -1];
             
-            this.handles.docInfoPanel = docInfoPanel;
-            this.handles.displayOptionsPanel = displayOptionsPanel;
+            obj.Handles.DocInfoPanel = docInfoPanel;
+            obj.Handles.DisplayOptionsPanel = displayOptionsPanel;
             
 
 
@@ -265,16 +265,16 @@ methods
             	'YTick', [], ...
             	'Box', 'off');
             
-            set(ax, 'XLim', doc.scene.xAxis.limits);
-            set(ax, 'YLim', doc.scene.yAxis.limits);
+            set(ax, 'XLim', doc.Scene.XAxis.Limits);
+            set(ax, 'YLim', doc.Scene.YAxis.Limits);
             
             % keep widgets handles
-            this.handles.mainAxis = ax;
+            obj.Handles.MainAxis = ax;
             
             horzPanel.Widths = [180 -1];
             
             % info panel for cursor position and value
-            this.handles.statusBar = uicontrol(...
+            obj.Handles.StatusBar = uicontrol(...
                 'Parent', mainPanel, ...
                 'Style', 'text', ...
                 'String', ' x=    y=     I=', ...
@@ -291,28 +291,28 @@ end
 
 %% Management of selected shapes
 methods
-    function clearSelection(this)
+    function clearSelection(obj)
         % remove all shapes in the selectedShapes field
-        this.selectedShapes = [];
+        obj.SelectedShapes = [];
     end
     
-    function addToSelection(this, shape)
-        this.selectedShapes = [this.selectedShapes shape];
+    function addToSelection(obj, shape)
+        obj.SelectedShapes = [obj.SelectedShapes shape];
     end
     
-    function removeFromSelection(this, shape)
-        ind = find(shape == this.selectedShapes);
+    function removeFromSelection(obj, shape)
+        ind = find(shape == obj.SelectedShapes);
         if isempty(ind)
             warning('ShapeViewer:MainFrame:Selection', ...
                 'could not find a shape in selection list');
             return;
         end
-        this.selectedShapes(ind(1)) = [];
+        obj.SelectedShapes(ind(1)) = [];
     end
     
-    function onSelectionUpdated(this)
-        updateShapeSelectionDisplay(this);
-        updateShapeList(this);
+    function onSelectionUpdated(obj)
+        updateShapeSelectionDisplay(obj);
+        updateShapeList(obj);
     end
 end
 
@@ -321,13 +321,13 @@ end
 
 methods
     
-    function updateDisplay(this)
+    function updateDisplay(obj)
         % refresh document display: clear axis, draw each shape, udpate axis
         
 %         disp('update Display');
         
-        ax = this.handles.mainAxis;
-        if isempty(this.doc)
+        ax = obj.Handles.MainAxis;
+        if isempty(obj.Doc)
             set(ax, 'Visible', 'off');
         end
         
@@ -336,20 +336,20 @@ methods
         hold on;
 
         % start by background image
-        if ~isempty(this.doc.scene.backgroundImage) && this.doc.displayBackgroundImage
-            show(this.doc.scene.backgroundImage);
+        if ~isempty(obj.Doc.Scene.BackgroundImage) && obj.Doc.DisplayBackgroundImage
+            show(obj.Doc.Scene.BackgroundImage);
         end
 
         % initialize line handles for axis lines
-        if this.doc.scene.axisLinesVisible
+        if obj.Doc.Scene.AxisLinesVisible
             hl1 = plot([0 1], [0 0], 'k-');
             hl2 = plot([0 0], [0 1], 'k-');
         end
         
 
         % draw each shape in the document
-        tool = this.currentTool;
-        shapes = this.doc.scene.shapes;
+        tool = obj.CurrentTool;
+        shapes = obj.Doc.Scene.Shapes;
         for i = 1:length(shapes)
             shape = shapes(i);
             hs = draw(shape);
@@ -357,36 +357,36 @@ methods
                 set(hs, 'buttonDownFcn', @tool.onMouseClicked);
                 set(hs, 'UserData', shape);
             end            
-            if any(shape == this.selectedShapes)
+            if any(shape == obj.SelectedShapes)
                 set(hs, 'Selected', 'on');
             end
         end
         
         % set axis bounds from view box
-        scene = this.doc.scene;
-        set(ax, 'XLim', scene.xAxis.limits);
-        set(ax, 'YLim', scene.yAxis.limits);
+        scene = obj.Doc.Scene;
+        set(ax, 'XLim', scene.XAxis.Limits);
+        set(ax, 'YLim', scene.YAxis.Limits);
             
         % draw lines for X and Y axes, based on current axis bounds
-        if this.doc.scene.axisLinesVisible
-%             viewBox = this.doc.viewBox;
+        if obj.Doc.Scene.AxisLinesVisible
+%             viewBox = obj.Doc.viewBox;
 %             if isempty(viewBox)
 %                 viewBox = [get(ax, 'xlim') get(ax, 'ylim')];
 %             end
-            set(hl1, 'XData', scene.xAxis.limits, 'Ydata', [0 0]);
-            set(hl2, 'Xdata', [0 0], 'YData', scene.yAxis.limits);
+            set(hl1, 'XData', scene.XAxis.Limits, 'Ydata', [0 0]);
+            set(hl2, 'Xdata', [0 0], 'YData', scene.YAxis.Limits);
         end
 
-        updateShapeList(this);
+        updateShapeList(obj);
         
 %         disp('end of update Display');
     end
     
-    function updateShapeSelectionDisplay(this)
+    function updateShapeSelectionDisplay(obj)
         % update the selected state of each shape
         
         % extract the list of handles in current axis
-        ax = this.handles.mainAxis;
+        ax = obj.Handles.MainAxis;
         children = get(ax, 'Children');
         
         % iterate over children
@@ -398,7 +398,7 @@ methods
             end
             
             % update selection state of current shape
-            if any(shape == this.selectedShapes)
+            if any(shape == obj.SelectedShapes)
                 set(children(i), 'Selected', 'on');
             else
                 set(children(i), 'Selected', 'off');
@@ -407,34 +407,34 @@ methods
         
     end
     
-    function updateTitle(this)
+    function updateTitle(obj)
         % set up title of the figure, containing name of doc
-        title = sprintf('%s - ShapeViewer', this.doc.name);
-        set(this.handles.figure, 'Name', title);
+        title = sprintf('%s - ShapeViewer', obj.Doc.Name);
+        set(obj.Handles.Figure, 'Name', title);
     end
     
     
-    function updateShapeList(this)
+    function updateShapeList(obj)
         % Refresh the shape tree when a shape is added or removed
 
         disp('update shape list');
         
-        scene = this.doc.scene;
-        nShapes = length(scene.shapes);
+        scene = obj.Doc.Scene;
+        nShapes = length(scene.Shapes);
         shapeNames = cell(nShapes, 1);
         inds = [];
         for i = 1:nShapes
-            shape = scene.shapes(i);
+            shape = scene.Shapes(i);
             
             % create name for current shape
-            name = shape.name;
-            if isempty(shape.name)
-                name = ['(' class(shape.geometry) ')'];
+            name = shape.Name;
+            if isempty(shape.Name)
+                name = ['(' class(shape.Geometry) ')'];
             end
             shapeNames{i} = name;
             
             % create the set of selected indices
-            if any(shape == this.selectedShapes)
+            if any(shape == obj.SelectedShapes)
                 inds = [inds i]; %#ok<AGROW>
             end
         end
@@ -444,7 +444,7 @@ methods
             inds = 1;
         end
         
-        set(this.handles.shapeList, ...
+        set(obj.Handles.ShapeList, ...
             'String', shapeNames, ...
             'Max', nShapes, ...
             'Value', inds);
@@ -454,18 +454,18 @@ end
 
 %% Mouse listeners management
 methods
-    function addMouseListener(this, listener)
-        % Add a mouse listener to this viewer
-        this.mouseListeners = [this.mouseListeners {listener}];
+    function addMouseListener(obj, listener)
+        % Add a mouse listener to obj viewer
+        obj.MouseListeners = [obj.MouseListeners {listener}];
     end
     
-    function removeMouseListener(this, listener)
-        % Remove a mouse listener from this viewer
+    function removeMouseListener(obj, listener)
+        % Remove a mouse listener from obj viewer
         
         % find which listeners are the same as the given one
-        inds = false(size(this.mouseListeners));
-        for i = 1:numel(this.mouseListeners)
-            if this.mouseListeners{i} == listener
+        inds = false(size(obj.MouseListeners));
+        for i = 1:numel(obj.MouseListeners)
+            if obj.MouseListeners{i} == listener
                 inds(i) = true;
             end
         end
@@ -473,28 +473,28 @@ methods
         % remove first existing listener
         inds = find(inds);
         if ~isempty(inds)
-            this.mouseListeners(inds(1)) = [];
+            obj.MouseListeners(inds(1)) = [];
         end
     end
     
-    function processMouseButtonPressed(this, hObject, eventdata)
+    function processMouseButtonPressed(obj, hObject, eventdata)
         % propagates mouse event to all listeners
-        for i = 1:length(this.mouseListeners)
-            onMouseButtonPressed(this.mouseListeners{i}, hObject, eventdata);
+        for i = 1:length(obj.MouseListeners)
+            onMouseButtonPressed(obj.MouseListeners{i}, hObject, eventdata);
         end
     end
     
-    function processMouseButtonReleased(this, hObject, eventdata)
+    function processMouseButtonReleased(obj, hObject, eventdata)
         % propagates mouse event to all listeners
-        for i = 1:length(this.mouseListeners)
-            onMouseButtonReleased(this.mouseListeners{i}, hObject, eventdata);
+        for i = 1:length(obj.MouseListeners)
+            onMouseButtonReleased(obj.MouseListeners{i}, hObject, eventdata);
         end
     end
     
-    function processMouseMoved(this, hObject, eventdata)
+    function processMouseMoved(obj, hObject, eventdata)
         % propagates mouse event to all listeners
-        for i = 1:length(this.mouseListeners)
-            onMouseMoved(this.mouseListeners{i}, hObject, eventdata);
+        for i = 1:length(obj.MouseListeners)
+            onMouseMoved(obj.MouseListeners{i}, hObject, eventdata);
         end
     end
 end
@@ -503,29 +503,29 @@ end
 %% Widget callbacks
 
 methods
-    function onShapeListModified(this, varargin)
+    function onShapeListModified(obj, varargin)
         
 %         disp('shape list updated');
         
-        inds = get(this.handles.shapeList, 'Value');
+        inds = get(obj.Handles.ShapeList, 'Value');
         if isempty(inds)
             return;
         end
         
-        this.selectedShapes = this.doc.scene.shapes(inds);
-        updateShapeSelectionDisplay(this);
+        obj.SelectedShapes = obj.Doc.Scene.Shapes(inds);
+        updateShapeSelectionDisplay(obj);
     end
 end
 
 %% Figure management
 methods
-    function close(this, varargin)
+    function close(obj, varargin)
         disp('Close shape viewer frame');
-        delete(this.handles.figure);
+        delete(obj.Handles.Figure);
     end
     
-    function onFigureResized(this, varargin)
-        updateShapeSelectionDisplay(this);
+    function onFigureResized(obj, varargin)
+        updateShapeSelectionDisplay(obj);
     end
 end
 

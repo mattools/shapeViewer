@@ -18,15 +18,15 @@ classdef ShapeViewerAction < handle
 
 %% Properties
 properties
-    % the name of this action, that should be unique for all actions
-    name;
+    % the name of obj action, that should be unique for all actions
+    Name;
 end % end properties
 
 
 %% Constructor
 methods
-    function this = ShapeViewerAction(name)
-        this.name = name;
+    function obj = ShapeViewerAction(name)
+        obj.Name = name;
     end
 
 end % end constructors
@@ -35,11 +35,11 @@ end % end constructors
 %% Methods
 
 methods (Abstract)
-    run(this, viewer)
+    run(obj, viewer)
 end
 
 methods
-    function b = isActivable(this, viewer) %#ok<INUSD>
+    function b = isActivable(obj, viewer) %#ok<INUSD>
         b = true;
     end
 end

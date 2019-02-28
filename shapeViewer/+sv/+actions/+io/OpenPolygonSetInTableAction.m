@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = OpenPolygonSetInTableAction(varargin)
+    function obj = OpenPolygonSetInTableAction(varargin)
     % Constructor for OpenPolygonInTableAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('openPolygonSetInTable');
+        obj = obj@sv.gui.ShapeViewerAction('openPolygonSetInTable');
     end
 
 end % end constructors
@@ -35,18 +35,18 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
         disp('Open a set of polygons in a table');
         
         % get handle to parent figure, and current doc
-        doc = viewer.doc;
+        doc = viewer.Doc;
         
         [fileName, pathName] = uigetfile( ...
             {
             '*.txt',                    'Text files (*.txt)'; ...
             '*.*',                      'All Files (*.*)'}, ...
             'Choose data table containing polygon vertices:', ...
-            viewer.gui.lastOpenPath, ...
+            viewer.gui.LastOpenPath, ...
             'MultiSelect', 'off');
         
         if isequal(fileName,0) || isequal(pathName,0)
@@ -54,7 +54,7 @@ methods
         end
 
         % save load path
-        viewer.gui.lastOpenPath = pathName;
+        viewer.GUI.LastOpenPath = pathName;
         
         importPolygonSet(fileName, pathName);
         
@@ -64,13 +64,13 @@ methods
             % Inner function to read a polygon and add it the the document
             tab = Table.read(fullfile(pathName, fileName));
             
-            box = viewBox(viewer.doc.scene);
+            box = viewBox(viewer.Doc.Scene);
             
             % create polygon set
             for i = 1:size(tab, 1)
                 coords  = rowToPolygon(tab.data(i,:), 'packed');
                 shape   = Shape(Polygon2D(coords));
-                shape.name = tab.rowNames{i};
+                shape.Name = tab.rowNames{i};
             
                 addShape(doc.scene, shape);
                 
@@ -81,9 +81,9 @@ methods
                 box(4) = max(box(4), bbox(4));
             end
             
-            doc.scene.xAxis.limits = box(1:2);
-            doc.scene.yAxis.limits = box(3:4);
-            doc.scene.zAxis.limits = box(5:6);
+            doc.Scene.XAxis.Limits = box(1:2);
+            doc.Scene.YAxis.Limits = box(3:4);
+            doc.Scene.ZAxis.Limits = box(5:6);
            
         end
         

@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = ZoomInAction(varargin)
+    function obj = ZoomInAction(varargin)
     % Constructor for ZoomInAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('zoomIn');
+        obj = obj@sv.gui.ShapeViewerAction('zoomIn');
     end
 
 end % end constructors
@@ -35,17 +35,17 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
         
         % get handle to parent figure, and current doc
-        ax = viewer.handles.mainAxis;
+        ax = viewer.Handles.MainAxis;
         axes(ax); 
         zoom(2);
 
         % update scene limits
-        viewer.doc.scene.xAxis.limits = get(ax, 'xlim');
-        viewer.doc.scene.yAxis.limits = get(ax, 'ylim');
-        viewer.doc.scene.zAxis.limits = get(ax, 'zlim');
+        viewer.Doc.Scene.XAxis.Limits = get(ax, 'xlim');
+        viewer.Doc.Scene.YAxis.Limits = get(ax, 'ylim');
+        viewer.Doc.Scene.ZAxis.Limits = get(ax, 'zlim');
 %         updateDisplay(viewer); 
     end
 end % end methods

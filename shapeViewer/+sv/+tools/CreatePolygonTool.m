@@ -16,18 +16,18 @@ classdef CreatePolygonTool < sv.gui.ShapeViewerTool
 % Copyright 2011 INRA - Cepia Software Platform.
 
 properties
-    vertices;
+    Vertices;
     
-    hPoly;
+    HPoly;
     
 %     selectedHandles = [];
 end
 
 %% Constructor
 methods
-    function this = CreatePolygonTool(viewer, varargin)
+    function obj = CreatePolygonTool(viewer, varargin)
         % Creates a new tool using parent gui and a name
-         this = this@sv.gui.ShapeViewerTool(viewer, 'createPolygon');
+         obj = obj@sv.gui.ShapeViewerTool(viewer, 'createPolygon');
     end % constructor 
 
 end % construction function
@@ -35,53 +35,53 @@ end % construction function
 %% General methods
 methods
     
-    function onMouseButtonPressed(this, hObject, eventdata) %#ok<INUSD>
+    function onMouseButtonPressed(obj, hObject, eventdata) %#ok<INUSD>
         
         % check if right-clicked or double-clicked
-        type = get(this.viewer.handles.figure, 'SelectionType');
+        type = get(obj.Viewer.Handles.Figure, 'SelectionType');
         if ~strcmp(type, 'normal')
             % update viewer's current selection
-            shape = Shape(Polygon2D(this.vertices));
-            this.viewer.doc.scene.addShape(shape);
+            shape = Shape(Polygon2D(obj.Vertices));
+            obj.Viewer.Doc.Scene.addShape(shape);
             
-            updateDisplay(this.viewer);
+            updateDisplay(obj.Viewer);
             
-            this.vertices = zeros(0, 2);
+            obj.Vertices = zeros(0, 2);
             return;
         end
         
         % add new vertex to the list
-        pos = get(this.viewer.handles.mainAxis, 'CurrentPoint');
-        this.vertices = [this.vertices ; pos(1,1:2)];
+        pos = get(obj.Viewer.Handles.MainAxis, 'CurrentPoint');
+        obj.Vertices = [obj.Vertices ; pos(1,1:2)];
 
-        if size(this.vertices, 1) == 1
+        if size(obj.Vertices, 1) == 1
             % if clicked first point, creates a new graphical object
-            removePolygonHandle(this);
-            this.hPoly = line(...
+            removePolygonHandle(obj);
+            obj.HPoly = line(...
                 'XData', pos(1,1), 'YData', pos(1,2), ...
                 'Marker', 's', 'MarkerSize', 3, ...
                 'Color', 'k', 'LineWidth', 1);
             
         else
             % update graphical object
-            set(this.hPoly, 'xdata', this.vertices([1:end 1], 1));
-            set(this.hPoly, 'ydata', this.vertices([1:end 1], 2));
+            set(obj.HPoly, 'xdata', obj.Vertices([1:end 1], 1));
+            set(obj.HPoly, 'ydata', obj.Vertices([1:end 1], 2));
             
         end
 
     end
             
-    function removePolygonHandle(this)
-        if ~ishandle(this.hPoly)
+    function removePolygonHandle(obj)
+        if ~ishandle(obj.HPoly)
             return;
         end
         
-        ax = this.viewer.handles.mainAxis;
+        ax = obj.Viewer.Handles.MainAxis;
         if isempty(ax)
             return;
         end
        
-        delete(this.hPoly);
+        delete(obj.HPoly);
         
     end
 

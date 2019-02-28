@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = DeleteSelectedShapes(varargin)
+    function obj = DeleteSelectedShapes(varargin)
     % Constructor for DeleteSelectedShapesAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('delete');
+        obj = obj@sv.gui.ShapeViewerAction('delete');
     end
 
 end % end constructors
@@ -35,13 +35,13 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
         disp('delete selected shapes');
         
         % get handle to parent figure, and current doc
-        scene = viewer.doc.scene;
+        scene = viewer.Doc.Scene;
        
-        shapes = viewer.selectedShapes;
+        shapes = viewer.SelectedShapes;
         for i = 1:length(shapes)
             shape = shapes(i);
             removeShape(scene, shape);

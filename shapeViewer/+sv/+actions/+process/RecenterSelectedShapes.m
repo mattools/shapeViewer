@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = RecenterSelectedShapes(varargin)
+    function obj = RecenterSelectedShapes(varargin)
     % Constructor for ScaleShapeAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('recenterShape');
+        obj = obj@sv.gui.ShapeViewerAction('recenterShape');
     end
 
 end % end constructors
@@ -35,11 +35,11 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer)  %#ok<*INUSL>
+    function run(obj, viewer)  %#ok<*INUSL>
         disp('recenter selected shape(s)');
         
         % get handle to parent viewer, and selected shapes
-        shapes = viewer.selectedShapes;
+        shapes = viewer.SelectedShapes;
         
         % basic input checks
         if isempty(shapes)
@@ -49,7 +49,7 @@ methods
         % transform each selected shape
         for i = 1:length(shapes)
             shape = shapes(i);
-            geometry = shape.geometry;
+            geometry = shape.Geometry;
             
             switch class(geometry)
                 case 'Polygon2D'
@@ -64,11 +64,11 @@ methods
                     continue;
             end
             
-            shape.geometry = translate(geometry, -[center.x center.y]);
+            shape.Geometry = translate(geometry, -[center.X center.Y]);
         end
 
         % recompute bounds
-        fitBoundsToShape(viewer.doc.scene);
+        fitBoundsToShape(viewer.Doc.Scene);
         
         updateDisplay(viewer);
     end

@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = SetAxisBounds(varargin)
+    function obj = SetAxisBounds(varargin)
     % Constructor for SetAxisBounds class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('setAxisBounds');
+        obj = obj@sv.gui.ShapeViewerAction('setAxisBounds');
     end
 
 end % end constructors
@@ -35,25 +35,25 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
 
         % get current scene
-        scene = viewer.doc.scene;
+        scene = viewer.Doc.Scene;
         
         % define dialog options
         prompt = {...
-            sprintf('XAxis Min bound (%f):', scene.xAxis.limits(1)), ...
-            sprintf('XAxis Max bound (%f):', scene.xAxis.limits(2)), ...
-            sprintf('YAxis Min bound (%f):', scene.yAxis.limits(1)), ...
-            sprintf('YAxis Max bound (%f):', scene.yAxis.limits(2)), ...
-            sprintf('ZAxis Min bound (%f):', scene.zAxis.limits(1)), ...
-            sprintf('ZAxis Max bound (%f):', scene.zAxis.limits(2)) };
+            sprintf('XAxis Min bound (%f):', scene.XAxis.Limits(1)), ...
+            sprintf('XAxis Max bound (%f):', scene.XAxis.Limits(2)), ...
+            sprintf('YAxis Min bound (%f):', scene.YAxis.Limits(1)), ...
+            sprintf('YAxis Max bound (%f):', scene.YAxis.Limits(2)), ...
+            sprintf('ZAxis Min bound (%f):', scene.ZAxis.Limits(1)), ...
+            sprintf('ZAxis Max bound (%f):', scene.ZAxis.Limits(2)) };
         title = 'Scene bounds';
         nbLines = 1;
         default = {...
-            num2str(scene.xAxis.limits(1)), num2str(scene.xAxis.limits(2)), ...
-            num2str(scene.yAxis.limits(1)), num2str(scene.yAxis.limits(2)), ...
-            num2str(scene.zAxis.limits(1)), num2str(scene.zAxis.limits(2)) };
+            num2str(scene.XAxis.Limits(1)), num2str(scene.XAxis.Limits(2)), ...
+            num2str(scene.YAxis.Limits(1)), num2str(scene.YAxis.Limits(2)), ...
+            num2str(scene.ZAxis.Limits(1)), num2str(scene.ZAxis.Limits(2)) };
         
         % open the dialog
         answers = inputdlg(prompt, title, nbLines, default);
@@ -85,9 +85,9 @@ methods
             xmin, xmax, ymin, ymax, zmin, zmax)); %#ok<DSPS>
 
         % setup new bounds
-        scene.xAxis.limits = [xmin xmax];
-        scene.yAxis.limits = [ymin ymax];
-        scene.zAxis.limits = [zmin zmax];
+        scene.XAxis.Limits = [xmin xmax];
+        scene.YAxis.Limits = [ymin ymax];
+        scene.ZAxis.Limits = [zmin zmax];
         
         % refresh display
         updateDisplay(viewer);

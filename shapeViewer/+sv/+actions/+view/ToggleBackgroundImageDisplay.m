@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = ToggleBackgroundImageDisplay(varargin)
+    function obj = ToggleBackgroundImageDisplay(varargin)
     % Constructor for ToggleBackgroundImageDisplay class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('ToggleBackgroundImageDisplay');
+        obj = obj@sv.gui.ShapeViewerAction('ToggleBackgroundImageDisplay');
     end
 
 end % end constructors
@@ -35,17 +35,17 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
         
         % get handle to parent figure, and current doc
-        viewer.doc.displayBackgroundImage = ~viewer.doc.displayBackgroundImage;
-        viewer.doc.modified = true;
+        viewer.Doc.DisplayBackgroundImage = ~viewer.Doc.DisplayBackgroundImage;
+        viewer.Doc.Modified = true;
         
         updateDisplay(viewer); 
     end
     
-    function b = isActivable(this, viewer) %#ok<INUSL>
-        b = ~isempty(viewer.doc.scene.backgroundImage);
+    function b = isActivable(obj, viewer) %#ok<INUSL>
+        b = ~isempty(viewer.Doc.Scene.BackgroundImage);
     end
     
 end % end methods

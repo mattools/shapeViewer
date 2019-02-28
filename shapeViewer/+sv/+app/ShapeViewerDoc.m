@@ -19,16 +19,16 @@ classdef ShapeViewerDoc < handle
 %% Properties
 properties    
     % the name of the doc, used as ID
-    name;
+    Name;
 
     % the scene displayed by this document
-    scene;
+    Scene;
     
     % a flag of modification
-    modified = false;
+    Modified = false;
 
     % flag for display of background image
-    displayBackgroundImage = true;
+    DisplayBackgroundImage = true;
     
 end % end properties
 
@@ -46,8 +46,8 @@ methods
             error('Requires a Scene instance as input argument');
         end
         
-        this.scene = var1;
-        this.name = '[No Name]';
+        this.Scene = var1;
+        this.Name = '[No Name]';
         
     end
 

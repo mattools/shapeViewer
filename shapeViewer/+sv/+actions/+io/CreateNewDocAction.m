@@ -11,20 +11,20 @@ classdef CreateNewDocAction < sv.gui.ShapeViewerAction
 
 % ------
 % Author: David Legland
-% e-mail: david.legland@nantes.inra.fr
+% e-mail: david.legland@inra.fr
 % Created: 2011-12-02,    using Matlab 7.9.0.529 (R2009b)
 % Copyright 2011 INRA - Cepia Software Platform.
 
 methods
-    function this = CreateNewDocAction(varargin)
+    function obj = CreateNewDocAction(varargin)
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('createNewDoc');
+        obj = obj@sv.gui.ShapeViewerAction('createNewDoc');
     end
 end
 
 methods
-    function run(this, viewer)         %#ok<INUSL>
-        createNewEmptyDocument(viewer.gui);
+    function run(obj, viewer)         %#ok<INUSL>
+        createNewEmptyDocument(viewer.GUI);
     end
 end
 

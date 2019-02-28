@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = OpenSceneAction(varargin)
+    function obj = OpenSceneAction(varargin)
         % Constructor for OpenSceneAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('openScene');
+        obj = obj@sv.gui.ShapeViewerAction('openScene');
     end
 
 end % end constructors
@@ -35,7 +35,7 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
         disp('Open a scene file');
         
         [fileName, pathName] = uigetfile( ...
@@ -43,7 +43,7 @@ methods
             '*.scene',                  'Scene files (*.scene)'; ...
             '*.*',                      'All Files (*.*)'}, ...
             'Choose file containing scene:', ...
-            viewer.gui.lastOpenPath, ...
+            viewer.GUI.LastOpenPath, ...
             'MultiSelect', 'on');
         
         if isequal(fileName,0) || isequal(pathName,0)
@@ -51,16 +51,15 @@ methods
         end
 
         % save load path
-        viewer.gui.lastOpenPath = pathName;
+        viewer.GUI.LastOpenPath = pathName;
         
         % read the scene frmthe file
         scene = Scene.read(fullfile(pathName, fileName));
         
         % create a new viewer
-        viewer = createSceneViewer(viewer.gui, scene);
+        viewer = createSceneViewer(viewer.GUI, scene);
         [tmp, baseName] = fileparts(fileName); %#ok<ASGLU>
-        viewer.doc.name = baseName;
-        
+        viewer.Doc.Name = baseName;
         
         updateTitle(viewer);
         updateDisplay(viewer);

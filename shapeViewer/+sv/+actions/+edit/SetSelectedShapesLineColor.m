@@ -54,11 +54,11 @@ end
 
 %% Constructor
 methods
-    function this = SetSelectedShapesLineColor(varargin)
+    function obj = SetSelectedShapesLineColor(varargin)
     % Constructor for SetSelectedShapesLineColor class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('setSelectedShapesLineColor');
+        obj = obj@sv.gui.ShapeViewerAction('setSelectedShapesLineColor');
     end
 
 end % end constructors
@@ -66,18 +66,18 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
         disp('set selected shapes line color');
 
         % check some shapes are selected
-        shapes = viewer.selectedShapes;
+        shapes = viewer.SelectedShapes;
         if isempty(shapes)
             return;
         end
  
         % defie default color
         shape1 = shapes(1);
-        defaultColor = sv.actions.edit.SetSelectedShapesLineColor.parseRGB(shape1.style.lineColor);
+        defaultColor = sv.actions.edit.SetSelectedShapesLineColor.parseRGB(shape1.Style.LineColor);
 
         % open color chooser dialog
         newColor = uisetcolor(defaultColor, 'Set Line Color');
@@ -85,7 +85,7 @@ methods
         % iterate over selected shapes
         for i = 1:length(shapes)
             shape = shapes(i);
-            shape.style.lineColor = newColor;
+            shape.Style.LineColor = newColor;
         end
 
         updateDisplay(viewer);

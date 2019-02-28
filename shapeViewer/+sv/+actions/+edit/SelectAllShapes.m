@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = SelectAllShapes(varargin)
+    function obj = SelectAllShapes(varargin)
     % Constructor for SelectAllShapesAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('selectAllShapes');
+        obj = obj@sv.gui.ShapeViewerAction('selectAllShapes');
     end
 
 end % end constructors
@@ -35,12 +35,12 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer)  %#ok<*INUSL>
+    function run(obj, viewer)  %#ok<*INUSL>
         disp('select all shapes');
         
         clearSelection(viewer);
         
-        shapes = viewer.doc.scene.shapes;
+        shapes = viewer.Doc.Scene.Shapes;
         for i = 1:length(shapes)
             addToSelection(viewer, shapes(i));
         end

@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = SaveScene(varargin)
+    function obj = SaveScene(varargin)
         % Constructor for OpenSceneAction class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('saveScene');
+        obj = obj@sv.gui.ShapeViewerAction('saveScene');
     end
 
 end % end constructors
@@ -35,7 +35,7 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
         disp('save current scene');
         
         [fileName, pathName] = uiputfile( ...
@@ -43,17 +43,17 @@ methods
             '*.scene',                  'Scene files (*.scene)'; ...
             '*.*',                      'All Files (*.*)'}, ...
             'Choose scene file:', ...
-            viewer.gui.lastSavePath);
+            viewer.GUI.LastSavePath);
         
         if isequal(fileName,0) || isequal(pathName,0)
             return;
         end
 
         % save load path
-        viewer.gui.lastSavePath = pathName;
+        viewer.GUI.LastSavePath = pathName;
         
         % read the scene frmthe file
-        write(viewer.doc.scene, fullfile(pathName, fileName));
+        write(viewer.Doc.Scene, fullfile(pathName, fileName));
         
     end
 end % end methods

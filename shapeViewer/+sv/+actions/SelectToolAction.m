@@ -16,45 +16,45 @@ classdef SelectToolAction < sv.gui.ShapeViewerAction
 % Copyright 2011 INRA - Cepia Software Platform.
 
 properties
-    % the tool to select
-    tool;
+    % the Tool to select
+    Tool;
 end
 
 methods
-    function this = SelectToolAction(tool)
+    function obj = SelectToolAction(Tool)
         % calls the parent constructor
-        name = ['selectTool-' tool.name];
-        this = this@sv.gui.ShapeViewerAction(name);
-        this.tool = tool;
+        name = ['selectTool-' Tool.Name];
+        obj = obj@sv.gui.ShapeViewerAction(name);
+        obj.Tool = Tool;
     end
 end
 
 methods
-    function run(this, viewer) 
-        disp(['select another tool: ' this.tool.name]);
+    function run(obj, viewer) 
+        disp(['select another Tool: ' obj.Tool.Name]);
         
-        % remove previous tool
+        % remove previous Tool
         currentTool = viewer.currentTool;
         if ~isempty(currentTool)
             deselect(currentTool);
             removeMouseListener(viewer, currentTool);
         end
         
-        % choose the new tool
-        viewer.currentTool = this.tool;
+        % choose the new Tool
+        viewer.currentTool = obj.Tool;
         
-        % initialize new tool if not empty
-        if ~isempty(this.tool)
-            select(this.tool);
-            addMouseListener(viewer, this.tool);
+        % initialize new Tool if not empty
+        if ~isempty(obj.Tool)
+            select(obj.Tool);
+            addMouseListener(viewer, obj.Tool);
             updateDisplay(viewer);
         end
     end
 end
 % 
 % methods
-%     function b = isActivable(this)
-%         b = isActivable(this.tool);
+%     function b = isActivable(obj)
+%         b = isActivable(obj.Tool);
 %     end
 % end
 

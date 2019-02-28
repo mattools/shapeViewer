@@ -18,26 +18,26 @@ classdef ShowCursorPositionTool < sv.gui.ShapeViewerTool
 
 %% Constructor
 methods
-    function this = ShowCursorPositionTool(viewer, varargin)
+    function obj = ShowCursorPositionTool(viewer, varargin)
         % Creates a new tool using parent gui and a name
-         this = this@sv.gui.ShapeViewerTool(viewer, 'showCursorPosition');
+         obj = obj@sv.gui.ShapeViewerTool(viewer, 'showCursorPosition');
     end % constructor 
 
 end % construction function
 
 %% General methods
 methods
-    function onMouseMoved(this, hObject, eventdata) %#ok<INUSD>
+    function onMouseMoved(obj, hObject, eventdata) %#ok<INUSD>
 
-        point = get(this.viewer.handles.mainAxis, 'CurrentPoint');
+        point = get(obj.Viewer.Handles.MainAxis, 'CurrentPoint');
         coord = point(1, 1:2);
         
         % Display only pixel position
-%         unit = this.viewer.doc.userUnit;
+%         unit = obj.viewer.doc.userUnit;
         unit = '';
         locString = sprintf('(x,y) = (%g,%g) %s', coord(1), coord(2), unit);
         
-        set(this.viewer.handles.statusBar, ...
+        set(obj.Viewer.Handles.StatusBar, ...
             'string', locString);
     end
         

@@ -19,19 +19,20 @@ classdef ShapeViewerTool < handle
 %% Properties
 properties
     % the parent GUI, that can be ShapeViewerMainFrame
-    viewer;
+    Viewer;
     
     % the name of this tool, that should be unique for all actions
-    name;
+    Name;
+    
 end % end properties
 
 
 %% Constructor
 methods
-    function this = ShapeViewerTool(viewer, name)
+    function obj = ShapeViewerTool(viewer, name)
         % Creates a new tool using parent gui and a name
-        this.viewer = viewer;
-        this.name = name;
+        obj.Viewer = viewer;
+        obj.Name = name;
     end % constructor 
 
 end % end constructors
@@ -39,29 +40,30 @@ end % end constructors
 
 %% General methods
 methods
-    function select(this) %#ok<*MANU>
+    function select(obj) %#ok<*MANU>
     end
     
-    function deselect(this)
+    function deselect(obj)
     end
     
-    function onMouseClicked(this, hObject, eventdata) %#ok<INUSD>
+    function onMouseClicked(obj, hObject, eventdata) %#ok<INUSD>
     end
     
-    function onMouseButtonPressed(this, hObject, eventdata) %#ok<INUSD>
+    function onMouseButtonPressed(obj, hObject, eventdata) %#ok<INUSD>
     end
     
-    function onMouseButtonReleased(this, hObject, eventdata) %#ok<INUSD>
+    function onMouseButtonReleased(obj, hObject, eventdata) %#ok<INUSD>
     end
     
-    function onMouseMoved(this, hObject, eventdata) %#ok<INUSD>
+    function onMouseMoved(obj, hObject, eventdata) %#ok<INUSD>
     end
     
 end % general methods
 
 
 methods
-    function b = isActivable(this)
+    function b = isActivable(obj)
+        % By default, new tools are activable
         b = true;
     end
 end

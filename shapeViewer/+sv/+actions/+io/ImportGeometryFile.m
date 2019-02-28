@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function this = ImportGeometryFile(varargin)
+    function obj = ImportGeometryFile(varargin)
     % Constructor for ImportGeometryFile class
 
         % calls the parent constructor
-        this = this@sv.gui.ShapeViewerAction('importGeometryFile');
+        obj = obj@sv.gui.ShapeViewerAction('importGeometryFile');
     end
 
 end % end constructors
@@ -35,18 +35,18 @@ end % end constructors
 
 %% Methods
 methods
-    function run(this, viewer) %#ok<INUSL>
+    function run(obj, viewer) %#ok<INUSL>
         disp('import a geometry file');
         
         % get handle to parent figure, and current doc
-        doc = viewer.doc;
+        doc = viewer.Doc;
         
         [fileName, pathName] = uigetfile( ...
             {
             '*.geometry',               'Geometry files (*.geometry)'; ...
             '*.*',                      'All Files (*.*)'}, ...
             'Choose geometry file:', ...
-            viewer.gui.lastOpenPath, ...
+            viewer.GUI.LastOpenPath, ...
             'MultiSelect', 'on');
         
         if isequal(fileName,0) || isequal(pathName,0)
@@ -54,7 +54,7 @@ methods
         end
 
         % save load path
-        viewer.gui.lastOpenPath = pathName;
+        viewer.GUI.LastOpenPath = pathName;
         
         if ischar(fileName)
             importGeometry(fileName, pathName);
@@ -75,20 +75,20 @@ methods
             shape   = Shape(geom);
             
             [path, name] = fileparts(fileName); %#ok<ASGLU>
-            shape.name = name;
+            shape.Name = name;
             
-            addShape(doc.scene, shape);
+            addShape(doc.Scene, shape);
             
             if ismethod(geom, 'boundingBox')
-                box = viewBox(viewer.doc.scene);
+                box = viewBox(viewer.Doc.Scene);
                 bbox = boundingBox(geom);
-                box(1) = min(box(1), bbox.xmin);
-                box(2) = max(box(2), bbox.xmax);
-                box(3) = min(box(3), bbox.ymin);
-                box(4) = max(box(4), bbox.ymax);
-                doc.scene.xAxis.limits = box(1:2);
-                doc.scene.yAxis.limits = box(3:4);
-                doc.scene.zAxis.limits = box(5:6);
+                box(1) = min(box(1), bbox.XMin);
+                box(2) = max(box(2), bbox.XMax);
+                box(3) = min(box(3), bbox.YMin);
+                box(4) = max(box(4), bbox.YMax);
+                doc.Scene.XAxis.Limits = box(1:2);
+                doc.Scene.YAxis.Limits = box(3:4);
+                doc.Scene.ZAxis.Limits = box(5:6);
             end
         end
         
