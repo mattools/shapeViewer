@@ -34,14 +34,14 @@ methods
         disp(['select another Tool: ' obj.Tool.Name]);
         
         % remove previous Tool
-        currentTool = viewer.currentTool;
+        currentTool = viewer.CurrentTool;
         if ~isempty(currentTool)
             deselect(currentTool);
             removeMouseListener(viewer, currentTool);
         end
         
         % choose the new Tool
-        viewer.currentTool = obj.Tool;
+        viewer.CurrentTool = obj.Tool;
         
         % initialize new Tool if not empty
         if ~isempty(obj.Tool)
