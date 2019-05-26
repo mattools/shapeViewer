@@ -45,18 +45,21 @@ methods
         fprintf('  xlim: [ %f ; %f ]\n', scene.XAxis.Limits);  
         fprintf('  ylim: [ %f ; %f ]\n', scene.YAxis.Limits);  
         fprintf('  zlim: [ %f ; %f ]\n', scene.ZAxis.Limits);
-        if ~isempty(scene.BackgroundImage)
-            fprintf('  backgroundImage: %s\n', scene.BackgroundImage.FilePath);  
-        end
-        fprintf('  shapes:\n');  
-        for iShape = 1:length(scene.Shapes)
-            shape = scene.Shapes(iShape);
-            id = sprintf('(%d)', iShape);
-            if ~isempty(shape.Name)
-                id = sprintf('%s "%s"', id, shape.Name);
-            end
-            fprintf('    %s: %s\n', id, class(shape.Geometry));  
-        end
+
+        printTree(scene.RootNode, 1);
+%         if ~isempty(scene.BackgroundImage)
+%             fprintf('  backgroundImage: %s\n', scene.BackgroundImage.FilePath);  
+%         end
+        
+%         fprintf('  shapes:\n');  
+%         for iShape = 1:length(scene.Shapes)
+%             shape = scene.Shapes(iShape);
+%             id = sprintf('(%d)', iShape);
+%             if ~isempty(shape.Name)
+%                 id = sprintf('%s "%s"', id, shape.Name);
+%             end
+%             fprintf('    %s: %s\n', id, class(shape.Geometry));  
+%         end
     end
 end % end methods
 

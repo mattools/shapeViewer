@@ -46,7 +46,11 @@ methods
         % Create a new empty scene, add to app, display it, and return it
         
         % creates new Scene instance
-        scene = Scene();
+        scene = SceneGraph();
+        scene.RootNode = GroupNode();
+        scene.RootNode.Name = 'Shapes';
+        
+        % create associated viewer
         frame = createSceneViewer(obj, scene);
     end
     

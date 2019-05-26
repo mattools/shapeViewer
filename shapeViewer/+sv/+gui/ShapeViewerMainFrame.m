@@ -97,8 +97,10 @@ methods
             
             addMenuItem(fileMenu, CreateNewDocAction(), '&New Document');
            
+            action = OpenSceneGraph('openSceneGraph');
+            addMenuItem(fileMenu, action, 'Open Scene Graph...', true);
             action = OpenSceneAction('openScene');
-            addMenuItem(fileMenu, action, 'Open Scene...', true);
+            addMenuItem(fileMenu, action, 'Open Scene...');
             action = ImportGeometryFile('importGeometryFile');
             addMenuItem(fileMenu, action, 'Import Geometry', true);
             action = OpenPointsInTableAction('openPointSetInTable');
@@ -335,13 +337,16 @@ methods
         cla(ax);
         hold on;
 
-        % start by background image
-        if ~isempty(obj.Doc.Scene.BackgroundImage) && obj.Doc.DisplayBackgroundImage
-            show(obj.Doc.Scene.BackgroundImage);
-        end
+        % extract scene info
+        scene = obj.Doc.Scene;
+
+%         % start by background image
+%         if ~isempty(obj.Doc.Scene.BackgroundImage) && obj.Doc.DisplayBackgroundImage
+%             show(obj.Doc.Scene.BackgroundImage);
+%         end
 
         % initialize line handles for axis lines
-        if obj.Doc.Scene.AxisLinesVisible
+        if scene.AxisLinesVisible
             hl1 = plot([0 1], [0 0], 'k-');
             hl2 = plot([0 0], [0 1], 'k-');
         end
@@ -349,21 +354,23 @@ methods
 
         % draw each shape in the document
         tool = obj.CurrentTool;
-        shapes = obj.Doc.Scene.Shapes;
-        for i = 1:length(shapes)
-            shape = shapes(i);
-            hs = draw(shape);
-            if ~isempty(tool)
-                set(hs, 'buttonDownFcn', @tool.onMouseClicked);
-                set(hs, 'UserData', shape);
-            end            
-            if any(shape == obj.SelectedShapes)
-                set(hs, 'Selected', 'on');
-            end
+        if ~isempty(scene.RootNode)
+            drawNode(scene.RootNode);
         end
+%         shapes = obj.Doc.Scene.Shapes;
+%         for i = 1:length(shapes)
+%             shape = shapes(i);
+%             hs = draw(shape);
+%             if ~isempty(tool)
+%                 set(hs, 'buttonDownFcn', @tool.onMouseClicked);
+%                 set(hs, 'UserData', shape);
+%             end            
+%             if any(shape == obj.SelectedShapes)
+%                 set(hs, 'Selected', 'on');
+%             end
+%         end
         
         % set axis bounds from view box
-        scene = obj.Doc.Scene;
         set(ax, 'XLim', scene.XAxis.Limits);
         set(ax, 'YLim', scene.YAxis.Limits);
             
@@ -380,6 +387,28 @@ methods
         updateShapeList(obj);
         
 %         disp('end of update Display');
+        function drawNode(node)
+            % recursively display the content of nodes, 
+            % and associates listeners
+            
+            if isa(node, 'GroupNode')
+                disp('group node');
+                children = node.Children;
+                for iChild = 1:length(children)
+                    drawNode(children{iChild});
+                end
+            else
+                % display a terminal node (leaf)
+                hs = draw(node);
+                if ~isempty(tool)
+                    set(hs, 'buttonDownFcn', @tool.onMouseClicked);
+                    set(hs, 'UserData', node);
+                end            
+                if any(node == obj.SelectedShapes)
+                    set(hs, 'Selected', 'on');
+                end
+            end
+        end
     end
     
     function updateShapeSelectionDisplay(obj)
@@ -420,34 +449,34 @@ methods
         disp('update shape list');
         
         scene = obj.Doc.Scene;
-        nShapes = length(scene.Shapes);
-        shapeNames = cell(nShapes, 1);
-        inds = [];
-        for i = 1:nShapes
-            shape = scene.Shapes(i);
-            
-            % create name for current shape
-            name = shape.Name;
-            if isempty(shape.Name)
-                name = ['(' class(shape.Geometry) ')'];
-            end
-            shapeNames{i} = name;
-            
-            % create the set of selected indices
-            if any(shape == obj.SelectedShapes)
-                inds = [inds i]; %#ok<AGROW>
-            end
-        end
-
-        % avoid empty indices, causing problems to gui...
-        if nShapes > 0 && isempty(inds)
-            inds = 1;
-        end
-        
-        set(obj.Handles.ShapeList, ...
-            'String', shapeNames, ...
-            'Max', nShapes, ...
-            'Value', inds);
+%         nShapes = length(scene.Shapes);
+%         shapeNames = cell(nShapes, 1);
+%         inds = [];
+%         for i = 1:nShapes
+%             shape = scene.Shapes(i);
+%             
+%             % create name for current shape
+%             name = shape.Name;
+%             if isempty(shape.Name)
+%                 name = ['(' class(shape.Geometry) ')'];
+%             end
+%             shapeNames{i} = name;
+%             
+%             % create the set of selected indices
+%             if any(shape == obj.SelectedShapes)
+%                 inds = [inds i]; %#ok<AGROW>
+%             end
+%         end
+% 
+%         % avoid empty indices, causing problems to gui...
+%         if nShapes > 0 && isempty(inds)
+%             inds = 1;
+%         end
+%         
+%         set(obj.Handles.ShapeList, ...
+%             'String', shapeNames, ...
+%             'Max', nShapes, ...
+%             'Value', inds);
     end
 end
 
@@ -507,13 +536,13 @@ methods
         
 %         disp('shape list updated');
         
-        inds = get(obj.Handles.ShapeList, 'Value');
-        if isempty(inds)
-            return;
-        end
-        
-        obj.SelectedShapes = obj.Doc.Scene.Shapes(inds);
-        updateShapeSelectionDisplay(obj);
+%         inds = get(obj.Handles.ShapeList, 'Value');
+%         if isempty(inds)
+%             return;
+%         end
+%         
+%         obj.SelectedShapes = obj.Doc.Scene.Shapes(inds);
+%         updateShapeSelectionDisplay(obj);
     end
 end
 

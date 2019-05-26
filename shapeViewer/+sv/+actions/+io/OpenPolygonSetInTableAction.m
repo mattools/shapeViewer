@@ -69,22 +69,23 @@ methods
             % create polygon set
             for i = 1:size(tab, 1)
                 coords  = rowToPolygon(tab.data(i,:), 'packed');
-                shape   = Shape(Polygon2D(coords));
+                shape   = ShapeNode(Polygon2D(coords));
                 shape.Name = tab.rowNames{i};
             
-                addShape(doc.scene, shape);
-                
+%                 addShape(doc.scene, shape);
+                add(doc.Scene.RootNode, shape);
+
                 bbox = boundingBox(tab.data);
                 box(1) = min(box(1), bbox(1));
                 box(2) = max(box(2), bbox(2));
                 box(3) = min(box(3), bbox(3));
                 box(4) = max(box(4), bbox(4));
             end
-            
+
+            % update view box 
             doc.Scene.XAxis.Limits = box(1:2);
             doc.Scene.YAxis.Limits = box(3:4);
             doc.Scene.ZAxis.Limits = box(5:6);
-           
         end
         
     end

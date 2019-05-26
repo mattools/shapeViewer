@@ -1,10 +1,10 @@
-classdef OpenSceneAction < sv.gui.ShapeViewerAction
+classdef OpenSceneGraph < sv.gui.ShapeViewerAction
 %OPENSCENEACTION Open a scene file
 %
-%   Class OpenSceneAction
+%   Class OpenSceneGraph
 %
 %   Example
-%   OpenSceneAction
+%   OpenSceneGraph
 %
 %   See also
 %
@@ -23,11 +23,11 @@ end % end properties
 
 %% Constructor
 methods
-    function obj = OpenSceneAction(varargin)
-        % Constructor for OpenSceneAction class
+    function obj = OpenSceneGraph(varargin)
+        % Constructor for OpenSceneGraph class
 
         % calls the parent constructor
-        obj = obj@sv.gui.ShapeViewerAction('openScene');
+        obj = obj@sv.gui.ShapeViewerAction('openSceneGraph');
     end
 
 end % end constructors
@@ -36,15 +36,15 @@ end % end constructors
 %% Methods
 methods
     function run(obj, viewer) %#ok<INUSL>
-        disp('Open a scene file');
+        disp('Open a scene graph file');
         
         [fileName, pathName] = uigetfile( ...
             {
-            '*.scene',                  'Scene files (*.scene)'; ...
+            '*.sceneGraph',             'SceneGraph files (*.sceneGraph)'; ...
             '*.*',                      'All Files (*.*)'}, ...
-            'Choose file containing scene:', ...
+            'Choose file containing scene graph:', ...
             viewer.GUI.LastOpenPath, ...
-            'MultiSelect', 'on');
+            'MultiSelect', 'off');
         
         if isequal(fileName,0) || isequal(pathName,0)
             return;
@@ -53,9 +53,8 @@ methods
         % save load path
         viewer.GUI.LastOpenPath = pathName;
         
-        % read the scene from the file
-        scene = Scene.read(fullfile(pathName, fileName));
-        scene = convertSceneToSceneGraph(scene);
+        % read the scene graph from the file
+        scene = SceneGraph.read(fullfile(pathName, fileName));
         
         % create a new viewer
         viewer = createSceneViewer(viewer.GUI, scene);

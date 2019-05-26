@@ -72,13 +72,15 @@ methods
             
             % create polygon
             poly    = Polygon2D(tab.data);
-            shape   = Shape(poly);
+            shape   = ShapeNode(poly);
             
             [path, name] = fileparts(fileName); %#ok<ASGLU>
             shape.Name = name;
             
-            addShape(doc.Scene, shape);
-            
+%             addShape(doc.Scene, shape);
+            % add the new shape to the root node
+            add(doc.Scene.RootNode, shape);
+
             box = viewBox(viewer.Doc.Scene);
             bbox = boundingBox(tab.data);
             box(1) = min(box(1), bbox(1));

@@ -21,7 +21,7 @@ properties
     % the name of the doc, used as ID
     Name;
 
-    % the scene displayed by this document
+    % the scene displayed by this document, as a SceneGraph instance
     Scene;
     
     % a flag of modification
@@ -42,8 +42,8 @@ methods
             error('Requires one input argument');
         end
         var1 = varargin{1};
-        if ~isa(var1, 'Scene')
-            error('Requires a Scene instance as input argument');
+        if ~isa(var1, 'SceneGraph')
+            error('Requires a SceneGraph instance as input argument');
         end
         
         this.Scene = var1;

@@ -42,14 +42,40 @@ methods
         scene = viewer.Doc.Scene;
        
         shapes = viewer.SelectedShapes;
+        % iterate over nodes to remove the selected shape
+        
         for i = 1:length(shapes)
             shape = shapes(i);
-            removeShape(scene, shape);
+            removeShapeFromGroupNode(scene.RootNode, shape);
         end
 
         updateDisplay(viewer);
         
+        function res = removeShapeFromGroupNode(node, shape)
+            
+            res = false;
+            
+            % iterates over children
+            for iChild = 1:length(node.Children)
+                child = node.Children{iChild};
+                if isLeaf(child)
+                    if child == shape
+                        res = true;
+                        node.Children(iChild) = [];
+                        return;
+                    end
+                else
+                    % process groups recursively
+                    res = removeShapeFromNode(child, shape);
+                    if res
+                        return;
+                    end
+                end
+            end
+        end
+    
     end
+    
 end % end methods
 
 end % end classdef

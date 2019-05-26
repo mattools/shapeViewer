@@ -72,12 +72,14 @@ methods
             geom = Geometry.read(fullfile(pathName, fileName));
             
             % create shape
-            shape   = Shape(geom);
+            shape   = ShapeNode(geom);
             
             [path, name] = fileparts(fileName); %#ok<ASGLU>
             shape.Name = name;
             
-            addShape(doc.Scene, shape);
+%             addShape(doc.Scene, shape);
+            % add the new shape to the root node
+            add(doc.Scene.RootNode, shape);
             
             if ismethod(geom, 'boundingBox')
                 box = viewBox(viewer.Doc.Scene);
@@ -89,6 +91,8 @@ methods
                 doc.Scene.XAxis.Limits = box(1:2);
                 doc.Scene.YAxis.Limits = box(3:4);
                 doc.Scene.ZAxis.Limits = box(5:6);
+            else
+                warning('class %s does not implement boundingBox', class(geom));
             end
         end
         

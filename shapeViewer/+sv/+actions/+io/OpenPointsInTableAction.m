@@ -72,12 +72,14 @@ methods
             
             % create point set
             pts     = MultiPoint2D(tab.data);
-            shape   = Shape(pts);
+            shape   = ShapeNode(pts);
             
             [path, name] = fileparts(fileName); %#ok<ASGLU>
             shape.Name = name;
             
-            addShape(doc.Scene, shape);
+%             addShape(doc.Scene, shape);
+            % add the new shape to the root node
+            add(doc.Scene.RootNode, shape);
             
             box = viewBox(viewer.Doc.Scene);
             bbox = boundingBox(tab.data);
