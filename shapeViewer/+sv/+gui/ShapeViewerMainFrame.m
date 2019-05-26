@@ -188,9 +188,9 @@ methods
             item = uimenu(menu, 'Label', label, ...
                 'Callback', @(src, evt) action.run(obj));
             
-            if ~isActivable(action, obj)
-                set(item, 'Enable', false);
-            end
+%             if ~isActivable(action, obj)
+%                 set(item, 'Enable', false);
+%             end
             
             % eventually add separator above item
             if ~isempty(varargin)
