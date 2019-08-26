@@ -1,5 +1,5 @@
 function varargout = ShapeViewer(varargin) 
-%SHAPEVIEWER GUI for geometrical shapes display and manipulation
+% GUI for geometrical shapes display and manipulation.
 %
 %   Usage:
 %   ShapeViewer
@@ -15,7 +15,7 @@ function varargout = ShapeViewer(varargin)
 %   ShapeViewer
 %
 %   See also
-%   sv.app.ShapeViewerDoc, sv.gui.ShapeViewerGUI, Shape, Scene
+%     sv.app.ShapeViewerDoc, sv.gui.ShapeViewerGUI, Shape, Scene
 
 % ------
 % Author: David Legland

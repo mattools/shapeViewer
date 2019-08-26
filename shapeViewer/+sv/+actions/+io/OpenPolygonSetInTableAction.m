@@ -68,14 +68,14 @@ methods
             
             % create polygon set
             for i = 1:size(tab, 1)
-                coords  = rowToPolygon(tab.data(i,:), 'packed');
+                coords  = rowToPolygon(tab.Data(i,:), 'packed');
                 shape   = ShapeNode(Polygon2D(coords));
-                shape.Name = tab.rowNames{i};
+                shape.Name = tab.RowNames{i};
             
 %                 addShape(doc.scene, shape);
                 add(doc.Scene.RootNode, shape);
 
-                bbox = boundingBox(tab.data);
+                bbox = boundingBox(tab.Data);
                 box(1) = min(box(1), bbox(1));
                 box(2) = max(box(2), bbox(2));
                 box(3) = min(box(3), bbox(3));

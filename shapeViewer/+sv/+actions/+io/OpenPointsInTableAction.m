@@ -82,7 +82,7 @@ methods
             add(doc.Scene.RootNode, shape);
             
             box = viewBox(viewer.Doc.Scene);
-            bbox = boundingBox(tab.data);
+            bbox = boundingBox(tab.Data);
             box(1) = min(box(1), bbox(1));
             box(2) = max(box(2), bbox(2));
             box(3) = min(box(3), bbox(3));
