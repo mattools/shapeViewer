@@ -28,6 +28,7 @@ properties
     Modified = false;
 
     % flag for display of background image
+    % (obsolete?)
     DisplayBackgroundImage = true;
     
 end % end properties
@@ -53,6 +54,30 @@ methods
 
 end % end constructors
 
+%% Shape management
+methods
+    function shapeNode = addShape(obj, shapeNode)
+        % Add the shape to the root node, and returns the new shape node
+        
+        % get scene root node, or create it if empty
+        root = obj.Scene.RootNode;
+        if isempty(root)
+            root = GroupNode();
+            obj.Scene.RootNode = root;
+        end
+        
+        % create shape node
+        if isa(shapeNode, 'Geometry')
+            shapeNode = ShapeNode(shapeNode);
+        end
+        shapeNode = ShapeNode(shapeNode);
+        
+        add(root, shapeNode);
+        
+        obj.Modified = true;
+    end
+
+end
 
 end % end classdef
 

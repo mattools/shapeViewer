@@ -1,13 +1,11 @@
 classdef CreatePolygonTool < sv.gui.ShapeViewerTool
-%CREATEPOLYGONTOOL Crate a new polygonal shape
-%
-%   output = CreatePolygonTool(input)
+% Create a new polygonal shape.
 %
 %   Example
 %   CreatePolygonTool
 %
 %   See also
-%
+%     CreateMultiPointTool
 
 % ------
 % Author: David Legland
@@ -41,8 +39,9 @@ methods
         type = get(obj.Viewer.Handles.Figure, 'SelectionType');
         if ~strcmp(type, 'normal')
             % update viewer's current selection
-            shape = Shape(Polygon2D(obj.Vertices));
-            obj.Viewer.Doc.Scene.addShape(shape);
+            shape = ShapeNode(Polygon2D(obj.Vertices));
+            
+            addShape(obj.Viewer.Doc, shape);
             
             updateDisplay(obj.Viewer);
             

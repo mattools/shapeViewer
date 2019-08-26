@@ -1,13 +1,12 @@
 classdef CreateMultiPointTool < sv.gui.ShapeViewerTool
-%CREATEPOLYGONTOOL Crate a new polygonal shape
+% Create a new multi-point shape.
 %
-%   output = CreateMultiPointTool(input)
 %
 %   Example
 %   CreateMultiPointTool
 %
 %   See also
-%
+%     CreatePolygonTool
 
 % ------
 % Author: David Legland
@@ -41,8 +40,8 @@ methods
         type = get(obj.Viewer.Handles.Figure, 'SelectionType');
         if ~strcmp(type, 'normal')
             % update viewer's current selection
-            shape = Shape(MultiPoint2D(obj.Vertices));
-            obj.Viewer.Doc.Scene.addShape(shape);
+            shape = ShapeNode(MultiPoint2D(obj.Vertices));
+            addShape(obj.Viewer.Doc, shape);
             
             updateDisplay(obj.Viewer);
             
