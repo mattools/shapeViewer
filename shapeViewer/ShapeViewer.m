@@ -28,9 +28,16 @@ import sv.gui.ShapeViewerGUI;
 % create the application, and a GUI
 gui = ShapeViewerGUI();
 
-% initialize a new document from the GUI
-viewer = createNewEmptyDocument(gui);
-
+% if argument is given, check if is a SceneGraph
+if  ~isempty(varargin) && isa(varargin{1}, 'SceneGraph')
+    sceneGraph = varargin{1};
+    viewer = createSceneViewer(gui, sceneGraph);
+    
+else
+    % initialize a new document from the GUI
+    viewer = createNewEmptyDocument(gui);
+    
+end
 % % if arguments are given, assume this is a shape
 % if ~isempty(varargin)
 %     % assumes shape is given as DATA + eventually type

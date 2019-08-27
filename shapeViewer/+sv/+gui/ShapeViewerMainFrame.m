@@ -1,5 +1,5 @@
 classdef ShapeViewerMainFrame < handle
-%SHAPEVIEWERMAINFRAME  One-line description here, please.
+% A viewer that displays a SceneGraph.
 %
 %   Class ShapeViewerMainFrame
 %
@@ -51,13 +51,15 @@ methods
             'NumberTitle', 'off', ...
             'NextPlot', 'new', ...
             'Name', 'Shape Viewer');
-        
-        % create main figure menu
-        setupMenu(fig);
-        setupLayout(fig);
-        
         obj.Handles.Figure = fig;
+
+        % create main figure menu
+        buildFrameMenu(gui, obj);
         
+        % setup layout
+        setupLayout(obj);
+
+        % refresh some displays
         updateDisplay(obj);
         updateTitle(obj);
         
@@ -79,217 +81,99 @@ methods
         addMouseListener(obj, tool);
         obj.CurrentTool = tool;
         
-        
         set(fig, 'UserData', obj);
+    end
+end
+
+% helper methods for contructor
+methods (Access = private)
+    function setupLayout(obj)
+
+        hf = obj.Handles.Figure;
         
-        function setupMenu(hf)
-            
-            import sv.actions.*;
-            import sv.actions.io.*;
-            import sv.actions.edit.*;
-            import sv.actions.process.*;
-            import sv.actions.view.*;
-            import sv.tools.*;
-            
-            % File Menu Definition 
-            
-            fileMenu = uimenu(hf, 'Label', '&Files');
-            
-            addMenuItem(fileMenu, CreateNewDocAction(), '&New Document');
-           
-            action = OpenSceneGraph('openSceneGraph');
-            addMenuItem(fileMenu, action, 'Open Scene Graph...', true);
-            action = OpenSceneAction('openScene');
-            addMenuItem(fileMenu, action, 'Open Scene...');
-            action = ImportGeometryFile('importGeometryFile');
-            addMenuItem(fileMenu, action, 'Import Geometry', true);
-            action = OpenPointsInTableAction('openPointSetInTable');
-            addMenuItem(fileMenu, action, 'Import Point &Set');
-            action = OpenPolygonInTableAction('openPolygonInTable');
-            addMenuItem(fileMenu, action, 'Import Polygon');
-            action = OpenPolygonSetInTableAction('openPolygonSetInTable');
-            addMenuItem(fileMenu, action, 'Import Polygon Set');
-            
-            addMenuItem(fileMenu, SaveScene(), 'Save As...', true);
-
-            action = CloseCurrentDocAction('closeDoc');
-            addMenuItem(fileMenu, action, '&Close', true);
-
-            
-            % Edit Menu Definition 
-            
-            editMenu = uimenu(hf, 'Label', '&Edit');
-            addMenuItem(editMenu, SelectAllShapes(obj),      'Select &All');
-            addMenuItem(editMenu, DeleteSelectedShapes(), '&Clear Selection');
-            addMenuItem(editMenu, PrintSceneInfo(), 'Scene Info', true);
-%             addMenuItem(editMenu, SetSelectedShapeStyleAction(obj),  'Set Display Style...', true);
-            addMenuItem(editMenu, SetSelectedShapesLineColor(obj),  'Set Selection Line Color...', true);
-            addMenuItem(editMenu, SetSelectedShapesLineWidth(obj),  'Set Selection Line Width...');
-            addMenuItem(editMenu, RenameSelectedShape(obj),  '&Rename', true);
-
-            viewMenu = uimenu(hf, 'Label', '&View');
-            addMenuItem(viewMenu, SetAxisBounds(), 'Set Axis Bounds...');
-            addMenuItem(viewMenu, ToggleBackgroundImageDisplay(), 'Toggle Background Image Display', true);
-            addMenuItem(viewMenu, ZoomInAction(), 'Zoom &In', true);
-            addMenuItem(viewMenu, ZoomOutAction(), 'Zoom &Out');
-            
-%              % Document Menu Definition 
-%             
-%             docMenu = uimenu(hf, 'Label', '&Document');
-%             addMenuItem(docMenu, AddNewDemoShapeAction(obj), 'Add Demo Shape');
-%             addMenuItem(docMenu, AddPaperHenShapeAction(obj), 'Add Paper Hen Shape');
-%             addMenuItem(docMenu, AddRandomPointsAction(obj), 'Add Random Points');
-%             addMenuItem(docMenu, DisplaySelectionInfoAction(obj), 'Display &Info', true);
-%             addMenuItem(docMenu, SetDocumentViewBoxAction(obj), 'Set &View Box...', true);
-%             addMenuItem(docMenu, ToggleDocumentShowAxisLinesAction(obj), 'Toggle &Axis Lines');
-%             addMenuItem(docMenu, ChangeUserUnitAction(obj), 'Change &Unit...');
-%             addMenuItem(docMenu, RenameCurrentDocAction(obj), '&Rename...');
-%             
-            
-           % Process Menu Definition 
-            
-            processMenu = uimenu(hf, 'Label', '&Process');
-
-%             % geometric transform of shapes
-%             addMenuItem(processMenu, FlipShapeHorizAction(obj), '&Horizontal Flip');
-%             addMenuItem(processMenu, FlipShapeVertAction(obj), '&Vertical Flip');
-            addMenuItem(processMenu, RecenterSelectedShapes(obj), 'Recenter');
-%             addMenuItem(processMenu, TranslateShapeAction(obj), '&Translate...');
-%             addMenuItem(processMenu, ScaleShapeAction(obj), '&Scale...');
-%             addMenuItem(processMenu, RotateShapeAction(obj), '&Rotate...');
-% 
-%             % computation of derived shapes
-%             addMenuItem(processMenu, AddShapeBoundingBoxAction(obj), '&Bounding Box', true);
-%             addMenuItem(processMenu, AddShapeOrientedBoxAction(obj), '&Oriented Box');
-%             addMenuItem(processMenu, AddShapeConvexHullAction(obj), '&Convex Hull');
-%             addMenuItem(processMenu, AddShapeInertiaEllipseAction(obj), 'Inertia &Ellipse');
-%             
-%             % operations on polygons
-%             addMenuItem(processMenu, SimplifyPolygonAction(obj), ...
-%                 'Simplify Polygon/Polyline', true);
-%             
-%             
-            % Tools Menu Definition 
-            
-            toolsMenu = uimenu(hf, 'Label', '&Tools');
-            addMenuItem(toolsMenu, ...
-                SelectToolAction(CreateMultiPointTool(obj)), ...
-                'Create &MultiPoint');
-            addMenuItem(toolsMenu, ...
-                SelectToolAction(CreatePolygonTool(obj)), ...
-                'Create &Polygon');
-            addMenuItem(toolsMenu, ...
-                SelectToolAction(SelectionTool(obj)), ...
-                'Selection', true);
-            
-        end % end of setupMenu function
-
-        function item = addMenuItem(menu, action, label, varargin)
-            
-            % creates new item
-            item = uimenu(menu, 'Label', label, ...
-                'Callback', @(src, evt) action.run(obj));
-            
-%             if ~isActivable(action, obj)
-%                 set(item, 'Enable', false);
-%             end
-            
-            % eventually add separator above item
-            if ~isempty(varargin)
-                var = varargin{1};
-                if islogical(var)
-                    set(item, 'Separator', 'On');
-                end
-            end
+        % compute background color of most widgets
+        bgColor = get(0, 'defaultUicontrolBackgroundColor');
+        if ispc
+            bgColor = 'White';
         end
-        
-        function setupLayout(hf)
-            
-            % compute background color of most widgets
-            bgColor = get(0, 'defaultUicontrolBackgroundColor');
-            if ispc
-                bgColor = 'White';
-            end
-            set(hf, 'defaultUicontrolBackgroundColor', bgColor);
-            
-            % vertical layout for putting status bar on bottom
-            mainPanel = uix.VBox('Parent', hf, ...
-                'Units', 'normalized', ...
-                'Position', [0 0 1 1]);
-            
-            % horizontal panel: main view nmiddle, options left and right
-            horzPanel = uix.HBoxFlex('Parent', mainPanel);
-            
-            % panel for doc info
-            docInfoPanel = uix.VBoxFlex('Parent', horzPanel);
+        set(hf, 'defaultUicontrolBackgroundColor', bgColor);
 
-            % create a default uittree
-            treePanel = uipanel(...
-                'Parent', docInfoPanel, ...
-                'Position', [0 0 1 1], ...
-                'BorderType', 'none', ...
-                'BorderWidth', 0);
-            
-            obj.Handles.ShapeList = uicontrol(...
-                'Style', 'listbox', ...
-                'Parent', treePanel, ...
-                'String', {'Circle', 'Poly1', 'Poly2', 'Ellipse'}, ...
-                'Min', 1, 'Max', Inf, ...
-                'Units', 'normalized', ...
-                'Position', [0 0 1 1], ...
-                'Callback', @obj.onShapeListModified);
+        % vertical layout for putting status bar on bottom
+        mainPanel = uix.VBox('Parent', hf, ...
+            'Units', 'normalized', ...
+            'Position', [0 0 1 1]);
+
+        % horizontal panel: main view nmiddle, options left and right
+        horzPanel = uix.HBoxFlex('Parent', mainPanel);
+
+        % panel for doc info
+        % Contains uitree for shapes, and a panel for selection info
+        docInfoPanel = uix.VBoxFlex('Parent', horzPanel);
+
+        % create a default uittree
+        treePanel = uipanel(...
+            'Parent', docInfoPanel, ...
+            'Position', [0 0 1 1], ...
+            'BorderType', 'none', ...
+            'BorderWidth', 0);
+
+        obj.Handles.ShapeList = uicontrol(...
+            'Style', 'listbox', ...
+            'Parent', treePanel, ...
+            'String', {'Circle', 'Poly1', 'Poly2', 'Ellipse'}, ...
+            'Min', 1, 'Max', Inf, ...
+            'Units', 'normalized', ...
+            'Position', [0 0 1 1], ...
+            'Callback', @obj.onShapeListModified);
 
 %             displayOptionsPanel = uipanel(...
 %                 'parent', docInfoPanel, ...
 %                 'Position', [0 0 1 1], ...
 %                 'BorderType', 'none', ...
 %                 'BorderWidth', 0);
-            displayOptionsPanel = uitable(...
-                'Parent', docInfoPanel, ...
-                'Position', [0 0 1 1] );
-            
-                        
-            docInfoPanel.Heights = [-1 -1];
-            
-            obj.Handles.DocInfoPanel = docInfoPanel;
-            obj.Handles.DisplayOptionsPanel = displayOptionsPanel;
-            
+        displayOptionsPanel = uitable(...
+            'Parent', docInfoPanel, ...
+            'Position', [0 0 1 1] );
 
 
-            % panel for image display
-            displayPanel = uix.VBox('Parent', horzPanel);
-            
-            ax = axes('Parent', displayPanel, ...
-                'Units', 'normalized', ...
-                'DataAspectRatio', [1 1 1], ...
-                'OuterPosition', [0 0 1 1], ...
-            	'XTick', [], ...
-            	'YTick', [], ...
-            	'Box', 'off');
-            
-            set(ax, 'XLim', doc.Scene.XAxis.Limits);
-            set(ax, 'YLim', doc.Scene.YAxis.Limits);
-            
-            % keep widgets handles
-            obj.Handles.MainAxis = ax;
-            
-            horzPanel.Widths = [180 -1];
-            
-            % info panel for cursor position and value
-            obj.Handles.StatusBar = uicontrol(...
-                'Parent', mainPanel, ...
-                'Style', 'text', ...
-                'String', ' x=    y=     I=', ...
-                'HorizontalAlignment', 'left');
-            
-            % set up relative sizes of layouts
-            mainPanel.Heights = [-1 20];
-        end
-      
+        docInfoPanel.Heights = [-1 -1];
+
+        obj.Handles.DocInfoPanel = docInfoPanel;
+        obj.Handles.DisplayOptionsPanel = displayOptionsPanel;
+
+
+        % panel for image display
+        displayPanel = uix.VBox('Parent', horzPanel);
+
+        ax = axes('Parent', displayPanel, ...
+            'Units', 'normalized', ...
+            'DataAspectRatio', [1 1 1], ...
+            'OuterPosition', [0 0 1 1], ...
+            'XTick', [], ...
+            'YTick', [], ...
+            'Box', 'off');
+
+        bounds = viewBox(doc.Scene);
+        set(ax, 'XLim', bounds(1:2));
+        set(ax, 'YLim', bounds(3:4));
+
+        % keep widgets handles
+        obj.Handles.MainAxis = ax;
+
+        horzPanel.Widths = [180 -1];
+
+        % info panel for cursor position and value
+        obj.Handles.StatusBar = uicontrol(...
+            'Parent', mainPanel, ...
+            'Style', 'text', ...
+            'String', ' x=    y=     I=', ...
+            'HorizontalAlignment', 'left');
+
+        % set up relative sizes of layouts
+        mainPanel.Heights = [-1 20];
     end
     
 end
-
 
 %% Management of selected shapes
 methods
@@ -340,17 +224,11 @@ methods
         % extract scene info
         scene = obj.Doc.Scene;
 
-%         % start by background image
-%         if ~isempty(obj.Doc.Scene.BackgroundImage) && obj.Doc.DisplayBackgroundImage
-%             show(obj.Doc.Scene.BackgroundImage);
-%         end
-
         % initialize line handles for axis lines
         if scene.AxisLinesVisible
             hl1 = plot([0 1], [0 0], 'k-');
             hl2 = plot([0 0], [0 1], 'k-');
         end
-        
 
         % draw each shape in the document
         tool = obj.CurrentTool;
@@ -371,17 +249,14 @@ methods
 %         end
         
         % set axis bounds from view box
-        set(ax, 'XLim', scene.XAxis.Limits);
-        set(ax, 'YLim', scene.YAxis.Limits);
+        bounds = viewBox(scene);
+        set(ax, 'XLim', bounds(1:2));
+        set(ax, 'YLim', bounds(3:4));
             
         % draw lines for X and Y axes, based on current axis bounds
-        if obj.Doc.Scene.AxisLinesVisible
-%             viewBox = obj.Doc.viewBox;
-%             if isempty(viewBox)
-%                 viewBox = [get(ax, 'xlim') get(ax, 'ylim')];
-%             end
-            set(hl1, 'XData', scene.XAxis.Limits, 'Ydata', [0 0]);
-            set(hl2, 'Xdata', [0 0], 'YData', scene.YAxis.Limits);
+        if scene.AxisLinesVisible
+            set(hl1, 'XData', bounds(1:2), 'Ydata', [0 0]);
+            set(hl2, 'Xdata', [0 0], 'YData', bounds(3:4));
         end
 
         updateShapeList(obj);
