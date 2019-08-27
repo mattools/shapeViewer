@@ -25,6 +25,8 @@ function varargout = ShapeViewer(varargin)
 
 import sv.gui.ShapeViewerGUI;
 
+disp('Initializing ShapeViewer...');
+
 % create the application, and a GUI
 gui = ShapeViewerGUI();
 

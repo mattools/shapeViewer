@@ -34,7 +34,7 @@ properties
     CurrentTool = [];
     
     % the set of selected shapes, stored as a cell array
-    SelectedShapes = [];
+    SelectedNodeList = [];
 
 end % end properties
 
@@ -56,7 +56,7 @@ methods
         % create main figure menu
         buildFrameMenu(gui, obj);
         
-        % setup layout
+        % setup layout (can be slow first time GUI Layout is activated)
         setupLayout(obj);
 
         % refresh some displays
@@ -120,21 +120,15 @@ methods (Access = private)
         obj.Handles.ShapeList = uicontrol(...
             'Style', 'listbox', ...
             'Parent', treePanel, ...
-            'String', {'Circle', 'Poly1', 'Poly2', 'Ellipse'}, ...
+            'String', {}, ...
             'Min', 1, 'Max', Inf, ...
             'Units', 'normalized', ...
             'Position', [0 0 1 1], ...
             'Callback', @obj.onShapeListModified);
 
-%             displayOptionsPanel = uipanel(...
-%                 'parent', docInfoPanel, ...
-%                 'Position', [0 0 1 1], ...
-%                 'BorderType', 'none', ...
-%                 'BorderWidth', 0);
         displayOptionsPanel = uitable(...
             'Parent', docInfoPanel, ...
             'Position', [0 0 1 1] );
-
 
         docInfoPanel.Heights = [-1 -1];
 
@@ -153,7 +147,7 @@ methods (Access = private)
             'YTick', [], ...
             'Box', 'off');
 
-        bounds = viewBox(doc.Scene);
+        bounds = viewBox(obj.Doc.Scene);
         set(ax, 'XLim', bounds(1:2));
         set(ax, 'YLim', bounds(3:4));
 
@@ -179,26 +173,30 @@ end
 methods
     function clearSelection(obj)
         % remove all shapes in the selectedShapes field
-        obj.SelectedShapes = [];
+        obj.SelectedNodeList = [];
     end
     
-    function addToSelection(obj, shape)
-        obj.SelectedShapes = [obj.SelectedShapes shape];
+    function addToSelection(obj, node)
+        obj.SelectedNodeList = [obj.SelectedNodeList node];
     end
     
-    function removeFromSelection(obj, shape)
-        ind = find(shape == obj.SelectedShapes);
+    function removeFromSelection(obj, node)
+        ind = find(node == obj.SelectedNodeList);
         if isempty(ind)
             warning('ShapeViewer:MainFrame:Selection', ...
-                'could not find a shape in selection list');
+                'could not find a node in selection list');
             return;
         end
-        obj.SelectedShapes(ind(1)) = [];
+        obj.SelectedNodeList(ind(1)) = [];
     end
     
     function onSelectionUpdated(obj)
         updateShapeSelectionDisplay(obj);
-        updateShapeList(obj);
+        updateShapeListDisplay(obj);
+    end
+    
+    function b = isNodeSelect(obj, node)
+        b = any(node == obj.SelectedNodeList);
     end
 end
 
@@ -235,18 +233,6 @@ methods
         if ~isempty(scene.RootNode)
             drawNode(scene.RootNode);
         end
-%         shapes = obj.Doc.Scene.Shapes;
-%         for i = 1:length(shapes)
-%             shape = shapes(i);
-%             hs = draw(shape);
-%             if ~isempty(tool)
-%                 set(hs, 'buttonDownFcn', @tool.onMouseClicked);
-%                 set(hs, 'UserData', shape);
-%             end            
-%             if any(shape == obj.SelectedShapes)
-%                 set(hs, 'Selected', 'on');
-%             end
-%         end
         
         % set axis bounds from view box
         bounds = viewBox(scene);
@@ -259,28 +245,29 @@ methods
             set(hl2, 'Xdata', [0 0], 'YData', bounds(3:4));
         end
 
-        updateShapeList(obj);
+        updateShapeListDisplay(obj);
+
         
-%         disp('end of update Display');
         function drawNode(node)
-            % recursively display the content of nodes, 
+            % inner function that recursively displays the content of nodes
             % and associates listeners
             
             if isa(node, 'GroupNode')
-                disp('group node');
-                children = node.Children;
-                for iChild = 1:length(children)
-                    drawNode(children{iChild});
+                % recursively display children
+                for iChild = 1:length(node.Children)
+                    drawNode(node.Children{iChild});
                 end
             else
                 % display a terminal node (leaf)
                 hs = draw(node);
+                set(hs, 'UserData', node);
                 if ~isempty(tool)
                     set(hs, 'buttonDownFcn', @tool.onMouseClicked);
-                    set(hs, 'UserData', node);
-                end            
-                if any(node == obj.SelectedShapes)
-                    set(hs, 'Selected', 'on');
+                end
+                
+                % set selection flag if needed
+                if any(node == obj.SelectedNodeList)
+                    set(hs, 'Selected', 'On');
                 end
             end
         end
@@ -296,16 +283,16 @@ methods
         % iterate over children
         for i = 1:length(children)
             % Extract shape referenced by current handle, if any
-            shape = get(children(i), 'UserData');
-            if isempty(shape) || ~isa(shape, 'Shape')
+            node = get(children(i), 'UserData');
+            if isempty(node) || ~isa(node, 'ShapeNode')
                 continue;
             end
             
             % update selection state of current shape
-            if any(shape == obj.SelectedShapes)
-                set(children(i), 'Selected', 'on');
+            if isNodeSelect(obj, node)
+                set(children(i), 'Selected', 'On');
             else
-                set(children(i), 'Selected', 'off');
+                set(children(i), 'Selected', 'Off');
             end
         end
         
@@ -318,40 +305,53 @@ methods
     end
     
     
-    function updateShapeList(obj)
+    function updateShapeListDisplay(obj)
         % Refresh the shape tree when a shape is added or removed
 
-        disp('update shape list');
+%         disp('update shape list');
         
         scene = obj.Doc.Scene;
-%         nShapes = length(scene.Shapes);
-%         shapeNames = cell(nShapes, 1);
-%         inds = [];
-%         for i = 1:nShapes
-%             shape = scene.Shapes(i);
-%             
-%             % create name for current shape
-%             name = shape.Name;
-%             if isempty(shape.Name)
-%                 name = ['(' class(shape.Geometry) ')'];
-%             end
-%             shapeNames{i} = name;
-%             
-%             % create the set of selected indices
-%             if any(shape == obj.SelectedShapes)
-%                 inds = [inds i]; %#ok<AGROW>
-%             end
-%         end
-% 
-%         % avoid empty indices, causing problems to gui...
-%         if nShapes > 0 && isempty(inds)
-%             inds = 1;
-%         end
-%         
-%         set(obj.Handles.ShapeList, ...
-%             'String', shapeNames, ...
-%             'Max', nShapes, ...
-%             'Value', inds);
+        
+        % create a list of list items, with corresponding node as UserData
+        inds = [];
+        [nodeNames, nodeList, inds] = processNode(scene.RootNode, cell(0,1), cell(0,1), inds);
+        
+        % avoid empty indices, causing problems to gui...
+        nShapes = length(nodeNames);
+        if nShapes > 0 && isempty(inds)
+            inds = 1;
+        end
+
+        set(obj.Handles.ShapeList, ...
+            'String', nodeNames, ...
+            'Max', nShapes, ...
+            'Value', inds, ...
+            'UserData', nodeList);
+
+        function [nodeNames, nodeList, inds] = processNode(node, nodeNames, nodeList, inds)
+            
+            % create name for current shape
+            name = node.Name;
+            if isempty(name)
+                name = ['(' class(node) ')'];
+            end
+            
+            % update the lists
+            nodeNames = [nodeNames ; {name}];
+            nodeList = [nodeList ; {node}];
+            
+            if find(obj.SelectedNodeList == node)
+                inds = [inds ; length(nodeNames)];
+            end
+            
+            % if recursice, process children
+            if isa(node, 'GroupNode')
+                for iChild = 1:length(node.Children)
+                    child = node.Children{iChild};
+                    [nodeNames, nodeList, inds] = processNode(child, nodeNames, nodeList, inds);
+                end
+            end
+        end
     end
 end
 
@@ -409,15 +409,14 @@ end
 methods
     function onShapeListModified(obj, varargin)
         
-%         disp('shape list updated');
+        inds = get(obj.Handles.ShapeList, 'Value');
+        if isempty(inds)
+            return;
+        end
         
-%         inds = get(obj.Handles.ShapeList, 'Value');
-%         if isempty(inds)
-%             return;
-%         end
-%         
-%         obj.SelectedShapes = obj.Doc.Scene.Shapes(inds);
-%         updateShapeSelectionDisplay(obj);
+        nodeList = get(obj.Handles.ShapeList, 'UserData');
+        obj.SelectedNodeList = nodeList{inds};
+        updateShapeSelectionDisplay(obj);
     end
 end
 

@@ -41,33 +41,34 @@ methods
         % get handle to parent figure, and current doc
         scene = viewer.Doc.Scene;
        
-        shapes = viewer.SelectedShapes;
+        nodeList = viewer.SelectedNodeList;
         % iterate over nodes to remove the selected shape
         
-        for i = 1:length(shapes)
-            shape = shapes(i);
-            removeShapeFromGroupNode(scene.RootNode, shape);
+        for i = 1:length(nodeList)
+            node = nodeList(i);
+            removeNodeFromGroupNode(node, scene.RootNode);
         end
 
         updateDisplay(viewer);
         
-        function res = removeShapeFromGroupNode(node, shape)
+        function res = removeNodeFromGroupNode(node, group)
             
             res = false;
             
             % iterates over children
-            for iChild = 1:length(node.Children)
-                child = node.Children{iChild};
-                if isLeaf(child)
-                    if child == shape
-                        res = true;
-                        node.Children(iChild) = [];
+            for iChild = 1:length(group.Children)
+                child = group.Children{iChild};
+                if ~isLeaf(child)
+                    % process groups recursively
+                    res = removeNodeFromGroupNode(node, child);
+                    if res
                         return;
                     end
                 else
-                    % process groups recursively
-                    res = removeShapeFromNode(child, shape);
-                    if res
+                    % process leaf node: compare with node
+                    if child == node
+                        res = true;
+                        group.Children(iChild) = [];
                         return;
                     end
                 end

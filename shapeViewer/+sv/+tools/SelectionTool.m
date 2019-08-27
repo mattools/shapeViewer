@@ -45,7 +45,7 @@ methods
 
         % toggles the selection state of current object
         sel = get(hObject, 'Selected');
-        if strcmp(sel, 'on')
+        if strcmp(sel, 'On')
             removeFromSelection(obj, hObject);
         else
             clearSelection(obj);
@@ -58,9 +58,9 @@ methods
     function clearSelection(obj)
         % clear selected state of all displayed shapes
         
-        children = get(obj.Viewer.Handles.MainAxis, 'children');
+        children = get(obj.Viewer.Handles.MainAxis, 'Children');
         for i = 1:length(children)
-            set(children(i), 'selected', 'off');
+            set(children(i), 'Selected', 'Off');
         end
         
         clearSelection(obj.Viewer);
@@ -68,18 +68,18 @@ methods
     
     function addToSelection(obj, hObj)
         obj.SelectedHandles = [obj.SelectedHandles hObj];
-        set(hObj, 'Selected', 'on');
+        set(hObj, 'Selected', 'On');
         
-        shape = get(hObj, 'UserData');
-        addToSelection(obj.Viewer, shape);
+        node = get(hObj, 'UserData');
+        addToSelection(obj.Viewer, node);
     end
     
     function removeFromSelection(obj, hObj)
         obj.SelectedHandles(obj.SelectedHandles == hObj) = [];
-        set(hObj, 'Selected', 'off');
+        set(hObj, 'Selected', 'Off');
         
-        shape = get(hObj, 'UserData');
-        removeFromSelection(obj.Viewer, shape);
+        node = get(hObj, 'UserData');
+        removeFromSelection(obj.Viewer, node);
     end
     
 end % general methods
